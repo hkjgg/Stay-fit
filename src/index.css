@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-obsidian: #0b0b0e;
+  --color-obsidian-soft: #131318;
+  --color-obsidian-line: #232329;
+  --color-orange: #ff5500;
+  --color-orange-soft: #ff8a4d;
+  --color-blue: #0066ff;
+  --color-blue-soft: #4d94ff;
+  --color-bone: #f5f3ee;
+
+  --font-display: 'Anton', 'Bebas Neue', 'Inter', sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-pulse-slow: pulse-slow 3s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-obsidian);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-obsidian);
+  color: var(--color-bone);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+#root {
+  position: relative;
+  width: 100%;
+}
+
+::selection {
+  background: var(--color-orange);
+  color: var(--color-obsidian);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-obsidian);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--color-orange), var(--color-blue));
+  border-radius: 8px;
+}
+
+.text-outline {
+  -webkit-text-stroke: 1px rgba(245, 243, 238, 0.4);
+  color: transparent;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.glass {
+  background: rgba(11, 11, 14, 0.55);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(245, 243, 238, 0.08);
+}
+
+.noise-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
