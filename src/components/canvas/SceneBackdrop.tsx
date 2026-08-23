@@ -5,6 +5,8 @@ interface SceneBackdropProps {
   videoSrc: string
   gradient: string
   className?: string
+  /** Frosts the video/gradient with a backdrop-blurred glass panel (glassmorphism zones). */
+  glass?: boolean
 }
 
 /**
@@ -15,7 +17,7 @@ interface SceneBackdropProps {
  * since animating `opacity` here creates a CSS stacking context that would
  * otherwise trap children in front of the canvas.
  */
-export function SceneBackdrop({ opacity, videoSrc, gradient, className = '' }: SceneBackdropProps) {
+export function SceneBackdrop({ opacity, videoSrc, gradient, className = '', glass = false }: SceneBackdropProps) {
   return (
     <motion.div style={{ opacity }} className={`absolute inset-0 ${className}`}>
       <div className={`absolute inset-0 ${gradient}`} />
@@ -28,6 +30,7 @@ export function SceneBackdrop({ opacity, videoSrc, gradient, className = '' }: S
         playsInline
         preload="none"
       />
+      {glass && <div className="absolute inset-0 bg-obsidian/20 backdrop-blur-2xl" />}
       <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/40 to-obsidian/70" />
       <div className="absolute inset-0 bg-obsidian/25" />
     </motion.div>

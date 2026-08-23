@@ -2,8 +2,9 @@ import { motion, useTransform } from 'framer-motion'
 import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRange'
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
 import { rangeProgress, smoothstep, lerp } from '../../lib/scroll3d'
+import { sceneRange } from '../../lib/constants'
 
-const RANGE: [number, number] = [0.25, 0.5]
+const RANGE = sceneRange('heavy')
 const FEATURES = ['Olympic Platforms', 'Free Weights to 50kg', 'Power Racks & Chains', 'Bodycore Coaching']
 
 export function HeavyLiftingBackdrop() {

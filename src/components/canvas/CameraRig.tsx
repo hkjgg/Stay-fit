@@ -17,7 +17,12 @@ const CAM_KEYFRAMES: { z: number; y: number; fov: number }[] = [
   { z: 4.6, y: 0.15, fov: 44 }, // heavy
   { z: 3.9, y: -0.05, fov: 46 }, // cardio
   { z: 4.4, y: 0.2, fov: 40 }, // solarium
+  { z: 4.8, y: 0.05, fov: 42 }, // fuel — starts pulled back, then zooms in below
 ]
+
+const FUEL_INDEX = 4
+/** How far the camera pushes in toward the shaker as the fuel scene scrolls. */
+const FUEL_ZOOM_IN = 1.0
 
 export function CameraRig({ progress }: { progress: MotionValue<number> }) {
   const { camera } = useThree()
@@ -40,6 +45,15 @@ export function CameraRig({ progress }: { progress: MotionValue<number> }) {
         y = lerp(from.y, to.y, eased)
         fov = lerp(from.fov, to.fov, eased)
       }
+    }
+
+    // Scene 4 (Fuel & Recovery): continuous push-in toward the shaker bottle
+    // as the user scrolls through the zone, on top of the base keyframe move.
+    const fuelLocal = rangeProgress(p, SCENES[FUEL_INDEX].range[0], SCENES[FUEL_INDEX].range[1])
+    if (fuelLocal > 0) {
+      const zoom = smoothstep(Math.min(fuelLocal / 0.75, 1))
+      z -= zoom * FUEL_ZOOM_IN
+      y = lerp(y, y - 0.1, zoom)
     }
 
     target.current.z = lerp(target.current.z, z, 0.08)

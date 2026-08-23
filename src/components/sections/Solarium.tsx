@@ -2,8 +2,9 @@ import { motion, useTransform } from 'framer-motion'
 import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRange'
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
 import { rangeProgress, smoothstep, lerp } from '../../lib/scroll3d'
+import { sceneRange } from '../../lib/constants'
 
-const RANGE: [number, number] = [0.75, 1]
+const RANGE = sceneRange('solarium')
 
 export function SolariumBackdrop() {
   const opacity = useSceneOpacity(...RANGE, 0.22)

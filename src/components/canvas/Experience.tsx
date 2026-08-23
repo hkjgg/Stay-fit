@@ -8,6 +8,7 @@ import { DumbbellModel } from './DumbbellModel'
 import { BarbellModel } from './BarbellModel'
 import { CardioMesh } from './CardioMesh'
 import { SolariumSphere } from './SolariumSphere'
+import { ShakerBottleModel } from './ShakerBottleModel'
 import { SCENES } from '../../lib/constants'
 
 const rangeOf = (id: string) => SCENES.find((s) => s.id === id)!.range
@@ -28,6 +29,7 @@ export function Experience({ progress }: { progress: MotionValue<number> }) {
         <BarbellModel progress={progress} range={rangeOf('heavy')} />
         <CardioMesh progress={progress} range={rangeOf('cardio')} />
         <SolariumSphere progress={progress} range={rangeOf('solarium')} />
+        <ShakerBottleModel progress={progress} range={rangeOf('fuel')} />
         <EffectComposer multisampling={0}>
           <Bloom intensity={0.9} luminanceThreshold={0.15} luminanceSmoothing={0.3} mipmapBlur />
           <Vignette eskil={false} offset={0.25} darkness={0.85} />

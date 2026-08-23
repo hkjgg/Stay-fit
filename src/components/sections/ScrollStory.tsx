@@ -5,6 +5,7 @@ import { HeroBackdrop, HeroContent } from './Hero'
 import { HeavyLiftingBackdrop, HeavyLiftingContent } from './HeavyLifting'
 import { CardioBackdrop, CardioContent } from './Cardio'
 import { SolariumBackdrop, SolariumContent } from './Solarium'
+import { FuelRecoveryBackdrop, FuelRecoveryContent } from './FuelRecovery'
 import { SCENES } from '../../lib/constants'
 import { rangeProgress, smoothstep, lerp } from '../../lib/scroll3d'
 
@@ -47,11 +48,13 @@ function StageContent() {
       <HeavyLiftingBackdrop />
       <CardioBackdrop />
       <SolariumBackdrop />
+      <FuelRecoveryBackdrop />
       <Experience progress={progress} />
       <HeroContent />
       <HeavyLiftingContent />
       <CardioContent />
       <SolariumContent />
+      <FuelRecoveryContent />
       <ProgressRail />
       <div className="noise-overlay" />
     </div>

@@ -11,6 +11,7 @@ const ZONE_COLOR: Record<string, string> = {
   heavy: '#0066ff',
   cardio: '#ff5500',
   solarium: '#0066ff',
+  fuel: '#00e5ff',
 }
 
 const tmpA = new Color()
@@ -39,8 +40,9 @@ export function Lights({ progress }: { progress: MotionValue<number> }) {
       key.current.intensity = lerp(8, 14, Math.sin(local * Math.PI))
     }
     if (rim.current) {
-      rim.current.color.set(activeIdx % 2 === 0 ? '#0066ff' : '#ff5500')
-      rim.current.intensity = 6
+      const zoneId = SCENES[activeIdx].id
+      rim.current.color.set(zoneId === 'fuel' ? '#7bf3ff' : activeIdx % 2 === 0 ? '#0066ff' : '#ff5500')
+      rim.current.intensity = zoneId === 'fuel' ? 8 : 6
     }
   })
 

@@ -2,8 +2,9 @@ import { motion, useTransform } from 'framer-motion'
 import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRange'
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
 import { rangeProgress, smoothstep, lerp } from '../../lib/scroll3d'
+import { sceneRange } from '../../lib/constants'
 
-const RANGE: [number, number] = [0.5, 0.75]
+const RANGE = sceneRange('cardio')
 const STATS = [
   { label: 'Treadmills & Bikes', value: '20+' },
   { label: 'HIIT Circuits / wk', value: '12' },
