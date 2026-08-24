@@ -10,7 +10,6 @@ const ZONE_COLOR: Record<string, string> = {
   hero: '#ff5500',
   heavy: '#0066ff',
   cardio: '#ff5500',
-  solarium: '#0066ff',
   fuel: '#00e5ff',
 }
 

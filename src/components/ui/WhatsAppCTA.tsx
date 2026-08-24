@@ -20,7 +20,7 @@ export function WhatsAppCTA() {
             <p className="font-display text-lg text-bone">STAY FIT</p>
             <p className="mt-1 text-xs text-bone/60">{WHATSAPP_LOCATION}</p>
             <p className="mt-3 text-sm text-bone/75">
-              Questions about plans, hours, or the solarium? Message us directly on WhatsApp.
+              Questions about plans, hours, or the fuel bar? Message us directly on WhatsApp.
             </p>
             <a
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`}

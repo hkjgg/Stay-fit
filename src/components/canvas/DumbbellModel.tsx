@@ -5,18 +5,49 @@ import type { MotionValue } from 'framer-motion'
 import { rangeProgress, smoothstep, lerp, sceneVisibility } from '../../lib/scroll3d'
 import { applyGroupOpacity } from '../../lib/three-utils'
 
-const STEEL = '#d8d9dd'
+const STEEL = '#c7cad2'
+const CHROME = '#eef0f4'
+const RUBBER = '#141416'
 
-function HexPlate({ x }: { x: number }) {
+const HANDLE_RADIUS = 0.1
+const KNURL_COUNT = 14
+const KNURL_SPAN = 0.85
+
+/** Ridged knurling on the grip — a tight row of thin rings rather than a smooth rod. */
+function KnurlRidges() {
+  return (
+    <>
+      {Array.from({ length: KNURL_COUNT }).map((_, i) => {
+        const x = lerp(-KNURL_SPAN / 2, KNURL_SPAN / 2, i / (KNURL_COUNT - 1))
+        return (
+          <mesh key={i} position={[x, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <torusGeometry args={[HANDLE_RADIUS + 0.003, 0.007, 8, 16]} />
+            <meshStandardMaterial color={STEEL} metalness={0.9} roughness={0.55} />
+          </mesh>
+        )
+      })}
+    </>
+  )
+}
+
+/** Matte-black rubber hex end with a chrome hub collar where it sleeves onto the handle. */
+function HexEnd({ x }: { x: number }) {
+  const dir = x > 0 ? 1 : -1
   return (
     <group position={[x, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
       <mesh castShadow receiveShadow>
-        <cylinderGeometry args={[0.62, 0.62, 0.22, 6]} />
-        <meshStandardMaterial color={STEEL} metalness={1} roughness={0.22} />
+        <cylinderGeometry args={[0.6, 0.6, 0.34, 6]} />
+        <meshStandardMaterial color={RUBBER} metalness={0.1} roughness={0.85} />
       </mesh>
-      <mesh position={[0, 0.13, 0]}>
-        <cylinderGeometry args={[0.4, 0.4, 0.05, 6]} />
-        <meshStandardMaterial color="#0b0b0e" metalness={0.8} roughness={0.4} />
+      {/* chrome hub collar on the inner face, where the plate sleeves onto the handle */}
+      <mesh position={[0, dir * 0.17, 0]}>
+        <cylinderGeometry args={[0.16, 0.16, 0.04, 24]} />
+        <meshStandardMaterial color={CHROME} metalness={1} roughness={0.1} />
+      </mesh>
+      {/* small chrome end cap on the outer face */}
+      <mesh position={[0, -dir * 0.17, 0]}>
+        <cylinderGeometry args={[0.1, 0.1, 0.02, 24]} />
+        <meshStandardMaterial color={CHROME} metalness={1} roughness={0.15} />
       </mesh>
     </group>
   )
@@ -48,24 +79,14 @@ export function DumbbellModel({
 
   return (
     <group ref={group}>
+      {/* handle */}
       <mesh castShadow receiveShadow rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.11, 0.11, 2.1, 24]} />
-        <meshStandardMaterial color={STEEL} metalness={1} roughness={0.15} />
+        <cylinderGeometry args={[HANDLE_RADIUS, HANDLE_RADIUS, 1.6, 24]} />
+        <meshStandardMaterial color={STEEL} metalness={1} roughness={0.2} />
       </mesh>
-      <mesh rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[0.14, 0.03, 16, 32]} />
-        <meshStandardMaterial color="#ff5500" emissive="#ff5500" emissiveIntensity={0.6} metalness={0.6} roughness={0.3} />
-      </mesh>
-      <mesh position={[0.55, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[0.14, 0.03, 16, 32]} />
-        <meshStandardMaterial color="#ff5500" emissive="#ff5500" emissiveIntensity={0.6} metalness={0.6} roughness={0.3} />
-      </mesh>
-      <mesh position={[-0.55, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[0.14, 0.03, 16, 32]} />
-        <meshStandardMaterial color="#ff5500" emissive="#ff5500" emissiveIntensity={0.6} metalness={0.6} roughness={0.3} />
-      </mesh>
-      <HexPlate x={0.85} />
-      <HexPlate x={-0.85} />
+      <KnurlRidges />
+      <HexEnd x={0.85} />
+      <HexEnd x={-0.85} />
     </group>
   )
 }

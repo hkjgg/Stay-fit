@@ -38,3 +38,15 @@ export function sceneVisibility(
   if (p < end) return smoothstep(1 - rangeProgress(p, outEdge, end))
   return 0
 }
+
+/**
+ * Transition-glow intensity for a *local* 0-1 scene progress: peaks at
+ * both boundaries (where one scene is cross-fading into the next) and
+ * fades to 0 through the middle of the scene, where a single backdrop is
+ * fully in view and needs no glow.
+ */
+export function edgeGlow(local: number, edge = 0.22) {
+  const enter = 1 - smoothstep(clamp01(local / edge))
+  const exit = 1 - smoothstep(clamp01((1 - local) / edge))
+  return Math.max(enter, exit)
+}

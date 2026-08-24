@@ -33,7 +33,7 @@ export const PLANS: Plan[] = [
     name: 'VIP',
     price: 85,
     blurb: 'All-access, priority everything',
-    perks: ['Everything in Standard', 'Solarium & Recovery lounge', 'Priority booking'],
+    perks: ['Everything in Standard', 'Fuel & Recovery Hub access', 'Priority booking'],
   },
 ]
 
@@ -45,10 +45,10 @@ export const ADD_ONS: AddOn[] = [
     description: '4 one-on-one sessions / month',
   },
   {
-    id: 'solarium',
-    label: 'Solarium Sessions',
+    id: 'shakes',
+    label: 'Custom Shake Plan',
     price: 25,
-    description: '4 UV solarium sessions / month',
+    description: '4 custom recovery shakes at the bar / month',
   },
   {
     id: 'nutrition',

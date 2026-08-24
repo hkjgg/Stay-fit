@@ -7,7 +7,6 @@ import { Lights } from './Lights'
 import { DumbbellModel } from './DumbbellModel'
 import { BarbellModel } from './BarbellModel'
 import { CardioMesh } from './CardioMesh'
-import { SolariumSphere } from './SolariumSphere'
 import { ShakerBottleModel } from './ShakerBottleModel'
 import { SCENES } from '../../lib/constants'
 
@@ -28,7 +27,6 @@ export function Experience({ progress }: { progress: MotionValue<number> }) {
         <DumbbellModel progress={progress} range={rangeOf('hero')} fadeIn={false} />
         <BarbellModel progress={progress} range={rangeOf('heavy')} />
         <CardioMesh progress={progress} range={rangeOf('cardio')} />
-        <SolariumSphere progress={progress} range={rangeOf('solarium')} />
         <ShakerBottleModel progress={progress} range={rangeOf('fuel')} />
         <EffectComposer multisampling={0}>
           <Bloom intensity={0.9} luminanceThreshold={0.15} luminanceSmoothing={0.3} mipmapBlur />

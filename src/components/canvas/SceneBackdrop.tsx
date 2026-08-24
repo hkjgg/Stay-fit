@@ -3,6 +3,10 @@ import { motion, useMotionValueEvent, type MotionValue } from 'framer-motion'
 
 interface SceneBackdropProps {
   opacity: MotionValue<number>
+  /** Parallax dolly: video scales down from ~1.08 to 1.0 across the scene. */
+  scale: MotionValue<number>
+  /** 0-1 cyan glow intensity, peaking during cross-fades at the scene edges. */
+  glow: MotionValue<number>
   videoSrc: string
   gradient: string
   className?: string
@@ -10,21 +14,33 @@ interface SceneBackdropProps {
   glass?: boolean
 }
 
+/** Cinematic playback speed — a touch of slow motion reads as higher production value than 1x raw footage. */
+const PLAYBACK_RATE = 0.85
+
 /**
  * Looping video layer with a themed gradient fallback underneath (shown
- * automatically if the video file is missing/unavailable) and a dark scrim
- * on top so the 3D model and typography painted above it stay legible.
- * Rendered BEHIND the shared 3D canvas — never wraps foreground content,
- * since animating `opacity` here creates a CSS stacking context that would
- * otherwise trap children in front of the canvas.
+ * automatically if the video file is missing/unavailable), a cinematic
+ * color-grade pass, and a dark scrim on top so the 3D model and typography
+ * painted above it stay legible. Rendered BEHIND the shared 3D canvas —
+ * never wraps foreground content, since animating `opacity` here creates a
+ * CSS stacking context that would otherwise trap children in front of the
+ * canvas.
  *
  * Every scene's backdrop stays mounted for the whole pinned scroll (so
  * cross-fades never pop), but only one is ever fully visible at a time —
  * so playback is gated on `opacity` rather than left on `autoPlay`. With
- * five of these sharing just two source videos, letting all of them decode
+ * four of these sharing just two source videos, letting all of them decode
  * continuously would be wasted work fighting the "smooth" scroll goal.
  */
-export function SceneBackdrop({ opacity, videoSrc, gradient, className = '', glass = false }: SceneBackdropProps) {
+export function SceneBackdrop({
+  opacity,
+  scale,
+  glow,
+  videoSrc,
+  gradient,
+  className = '',
+  glass = false,
+}: SceneBackdropProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const playing = useRef(false)
 
@@ -50,10 +66,14 @@ export function SceneBackdrop({ opacity, videoSrc, gradient, className = '', gla
   useMotionValueEvent(opacity, 'change', syncPlayback)
 
   return (
-    <motion.div style={{ opacity }} className={`absolute inset-0 ${className}`}>
+    <motion.div style={{ opacity }} className={`absolute inset-0 overflow-hidden ${className}`}>
       <div className={`absolute inset-0 ${gradient}`} />
-      <video
+      <motion.video
         ref={videoRef}
+        style={{ scale }}
+        onLoadedMetadata={(e) => {
+          e.currentTarget.playbackRate = PLAYBACK_RATE
+        }}
         className="absolute inset-0 h-full w-full object-cover opacity-60 mix-blend-luminosity"
         src={videoSrc}
         loop
@@ -61,9 +81,20 @@ export function SceneBackdrop({ opacity, videoSrc, gradient, className = '', gla
         playsInline
         preload="metadata"
       />
+
+      {/* Cinematic grade: radial obsidian vignette (multiply) + soft warm grade pass. */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_38%,rgba(11,11,14,0.95)_100%)] mix-blend-multiply" />
+      <div className="absolute inset-0 bg-gradient-to-br from-obsidian/50 via-transparent to-obsidian/60 mix-blend-soft-light" />
+
       {glass && <div className="absolute inset-0 bg-obsidian/20 backdrop-blur-2xl" />}
       <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/40 to-obsidian/70" />
       <div className="absolute inset-0 bg-obsidian/25" />
+
+      {/* Transition glow: soft cyan bloom that pulses in during scene cross-fades. */}
+      <motion.div
+        style={{ opacity: glow }}
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,229,255,0.35),transparent_65%)] blur-3xl"
+      />
     </motion.div>
   )
 }

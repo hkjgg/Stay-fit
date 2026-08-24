@@ -1,7 +1,7 @@
 import { motion, useTransform } from 'framer-motion'
 import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRange'
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
-import { rangeProgress, smoothstep, lerp } from '../../lib/scroll3d'
+import { rangeProgress, smoothstep, lerp, edgeGlow } from '../../lib/scroll3d'
 import { sceneRange } from '../../lib/constants'
 
 const RANGE = sceneRange('fuel')
@@ -15,9 +15,15 @@ const PRODUCTS = [
 
 export function FuelRecoveryBackdrop() {
   const opacity = useSceneOpacity(...RANGE, 0.16)
+  const local = useSceneLocalProgress(...RANGE)
+  const scale = useTransform(local, (t) => lerp(1.08, 1.0, smoothstep(t)))
+  // Entering the Protein Bar gets the most dramatic glow: a stronger, wider pulse.
+  const glow = useTransform(local, (t) => Math.min(1, edgeGlow(t, 0.3) * 1.3))
   return (
     <SceneBackdrop
       opacity={opacity}
+      scale={scale}
+      glow={glow}
       videoSrc="/videos/VID_1.mp4"
       gradient="bg-[radial-gradient(ellipse_at_50%_45%,#062026_0%,#0b0b0e_70%)]"
       glass
@@ -40,7 +46,7 @@ export function FuelRecoveryContent() {
       <div />
 
       <motion.div style={{ y: titleY }}>
-        <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan/40 bg-cyan/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-cyan-soft">
+        <span className="glass mb-4 inline-flex items-center gap-2 rounded-full border border-cyan/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-cyan-soft">
           Fuel &amp; Recovery Hub
         </span>
         <h2 className="font-display text-[10vw] leading-[0.88] text-bone sm:text-[5.5vw] md:text-[4.4vw]">
@@ -58,7 +64,7 @@ export function FuelRecoveryContent() {
             <motion.div
               key={product.name}
               whileHover={{ y: -6, borderColor: 'rgba(0,229,255,0.6)' }}
-              className="glass rounded-xl border border-cyan/15 px-4 py-4 text-left shadow-[0_0_24px_rgba(0,229,255,0.08)] transition"
+              className="glass rounded-xl border border-cyan/25 px-4 py-4 text-left shadow-[0_0_24px_rgba(0,229,255,0.08)] transition"
             >
               <p className="text-sm font-semibold text-bone">{product.name}</p>
               <p className="mt-1 text-xs text-bone/50">{product.blurb}</p>

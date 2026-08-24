@@ -1,7 +1,7 @@
 import { motion, useTransform } from 'framer-motion'
 import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRange'
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
-import { rangeProgress, smoothstep, lerp } from '../../lib/scroll3d'
+import { rangeProgress, smoothstep, lerp, edgeGlow } from '../../lib/scroll3d'
 import { sceneRange } from '../../lib/constants'
 
 const RANGE = sceneRange('cardio')
@@ -13,9 +13,14 @@ const STATS = [
 
 export function CardioBackdrop() {
   const opacity = useSceneOpacity(...RANGE)
+  const local = useSceneLocalProgress(...RANGE)
+  const scale = useTransform(local, (t) => lerp(1.08, 1.0, smoothstep(t)))
+  const glow = useTransform(local, (t) => edgeGlow(t))
   return (
     <SceneBackdrop
       opacity={opacity}
+      scale={scale}
+      glow={glow}
       videoSrc="/videos/VID_1.mp4"
       gradient="bg-[radial-gradient(ellipse_at_80%_50%,#331a0d_0%,#0b0b0e_70%)]"
     />
@@ -33,7 +38,7 @@ export function CardioContent() {
       className="absolute inset-0 flex h-full w-full items-center justify-end px-8 text-right md:px-20"
     >
       <motion.div style={{ x }} className="max-w-xl">
-        <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange/40 bg-orange/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-orange-soft">
+        <span className="glass mb-4 inline-flex items-center gap-2 rounded-full border border-orange/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-orange-soft">
           Cardio &amp; Kinetic Zone
         </span>
         <h2 className="font-display text-[11vw] leading-[0.88] text-bone sm:text-[6vw] md:text-[5vw]">
@@ -47,9 +52,12 @@ export function CardioContent() {
           Treadmill rows, kinetic HIIT circuits, and heart-rate synced classes that turn
           every rep into a data point — fast, loud, and built for speed.
         </p>
-        <div className="mt-8 flex justify-end gap-6">
+        <div className="mt-8 flex justify-end gap-3">
           {STATS.map((s) => (
-            <div key={s.label} className="text-right">
+            <div
+              key={s.label}
+              className="glass rounded-xl border border-orange/25 px-4 py-3 text-right"
+            >
               <div className="font-display text-3xl text-orange-soft">{s.value}</div>
               <div className="text-xs uppercase tracking-wide text-bone/50">{s.label}</div>
             </div>

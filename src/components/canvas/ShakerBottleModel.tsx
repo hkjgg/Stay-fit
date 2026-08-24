@@ -12,9 +12,10 @@ const CYAN = '#00e5ff'
 
 /**
  * Matte-black & chrome shaker bottle (left) beside a protein/creatine
- * container (right). As the fuel scene scrolls, the lid unscrews, spins
- * up and floats off the body while cyan "icy glow" particles vent from
- * the gap underneath it.
+ * container (right), both finished with chrome lids and a soft cyan
+ * inner glow. As the fuel scene scrolls, the shaker's lid unscrews,
+ * spins up and floats off the body while cyan "icy glow" particles vent
+ * from the gap underneath it.
  */
 export function ShakerBottleModel({
   progress,
@@ -69,6 +70,12 @@ export function ShakerBottleModel({
           <meshStandardMaterial color={CHROME} roughness={0.08} metalness={1} />
         </mesh>
 
+        {/* cyan LED glow strip — reads as an inner light through the matte body */}
+        <mesh position={[0, 0.15, 0.395]}>
+          <boxGeometry args={[0.05, 0.85, 0.01]} />
+          <meshStandardMaterial color={CYAN} emissive={CYAN} emissiveIntensity={2.2} toneMapped={false} />
+        </mesh>
+
         <group ref={lid} position={[0, 1.05, 0]}>
           <mesh castShadow>
             <cylinderGeometry args={[0.45, 0.45, 0.28, 32]} />
@@ -77,6 +84,11 @@ export function ShakerBottleModel({
           <mesh position={[0, 0.16, 0]}>
             <cylinderGeometry args={[0.14, 0.14, 0.22, 20]} />
             <meshStandardMaterial color={MATTE_BLACK} roughness={0.5} metalness={0.3} />
+          </mesh>
+          {/* carry-handle loop */}
+          <mesh position={[0, 0.14, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.09, 0.014, 8, 24, Math.PI]} />
+            <meshStandardMaterial color={CHROME} roughness={0.1} metalness={1} />
           </mesh>
         </group>
 
@@ -93,11 +105,16 @@ export function ShakerBottleModel({
         </mesh>
         <mesh position={[0, 0.3, 0]}>
           <cylinderGeometry args={[0.363, 0.363, 0.22, 32]} />
-          <meshStandardMaterial color={CYAN} emissive={CYAN} emissiveIntensity={1.1} metalness={0.3} roughness={0.35} />
+          <meshStandardMaterial color={CYAN} emissive={CYAN} emissiveIntensity={1.4} toneMapped={false} metalness={0.3} roughness={0.35} />
         </mesh>
+        {/* chrome lid */}
         <mesh position={[0, 0.78, 0]} castShadow>
           <cylinderGeometry args={[0.38, 0.38, 0.22, 32]} />
-          <meshStandardMaterial color={MATTE_BLACK} roughness={0.4} metalness={0.4} />
+          <meshStandardMaterial color={CHROME} roughness={0.08} metalness={1} />
+        </mesh>
+        <mesh position={[0, 0.9, 0]}>
+          <cylinderGeometry args={[0.16, 0.16, 0.04, 24]} />
+          <meshStandardMaterial color={CHROME} roughness={0.1} metalness={1} />
         </mesh>
       </group>
     </group>

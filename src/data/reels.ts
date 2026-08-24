@@ -23,10 +23,10 @@ export const REELS: Reel[] = [
   },
   {
     id: 'reel-3',
-    title: 'UV Solarium Glow',
-    category: 'Recovery',
+    title: 'Post-Workout Shake',
+    category: 'Fuel & Recovery',
     video: '/videos/reels/reel-3.mp4',
-    gradient: 'from-blue/30 via-orange/20 to-obsidian',
+    gradient: 'from-cyan/30 via-blue/20 to-obsidian',
   },
   {
     id: 'reel-4',

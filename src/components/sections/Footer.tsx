@@ -9,7 +9,7 @@ export function Footer() {
             STAY<span className="text-orange">FIT</span>
           </p>
           <p className="mt-3 max-w-xs text-sm text-bone/50">
-            Sore today, strong tomorrow. Heavy lifting, kinetic cardio, and VIP solarium
+            Sore today, strong tomorrow. Heavy lifting, kinetic cardio, and fuel &amp;
             recovery in {WHATSAPP_LOCATION}.
           </p>
         </div>
@@ -36,7 +36,7 @@ export function Footer() {
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-bone/40">Zones</p>
             <p className="text-sm text-bone/70">Heavy Lifting</p>
             <p className="text-sm text-bone/70">Cardio &amp; Kinetic</p>
-            <p className="text-sm text-bone/70">Solarium &amp; Recovery</p>
+            <p className="text-sm text-bone/70">Fuel &amp; Recovery</p>
           </div>
         </div>
       </div>
