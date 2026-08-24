@@ -1,9 +1,12 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import type { Group } from 'three'
+import { MathUtils, type Group } from 'three'
 import type { MotionValue } from 'framer-motion'
-import { rangeProgress, smoothstep, lerp, sceneVisibility } from '../../lib/scroll3d'
+import { rangeProgress, smoothstep, sceneVisibility } from '../../lib/scroll3d'
 import { applyGroupOpacity } from '../../lib/three-utils'
+
+/** Damping rate for scroll-bound rotation — frame-rate independent, converges in ~250-350ms regardless of device fps. */
+const ROTATION_DAMP = 10
 
 const IRON = '#15161a'
 const STEEL = '#c7cad2'
@@ -102,13 +105,13 @@ export function PowerRackModel({
 }) {
   const group = useRef<Group>(null)
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (!group.current) return
     const p = rangeProgress(progress.get(), range[0], range[1])
     const opacity = sceneVisibility(progress.get(), range)
     applyGroupOpacity(group.current, opacity)
 
-    group.current.rotation.y = lerp(group.current.rotation.y, 0.3 - p * 0.15, 0.05)
+    group.current.rotation.y = MathUtils.damp(group.current.rotation.y, 0.2 + p * Math.PI * 1.1, ROTATION_DAMP, delta)
     group.current.position.y = Math.sin(state.clock.elapsedTime * 0.6) * 0.08
 
     // Plates load onto the bar from off the end as the scene scrolls in.

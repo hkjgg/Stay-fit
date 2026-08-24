@@ -16,12 +16,12 @@ const CAM_KEYFRAMES: { z: number; y: number; fov: number }[] = [
   { z: 4.2, y: 0.1, fov: 42 }, // hero
   { z: 4.6, y: 0.15, fov: 44 }, // heavy
   { z: 3.9, y: -0.05, fov: 46 }, // cardio
-  { z: 4.8, y: 0.05, fov: 42 }, // fuel — starts pulled back, then zooms in below
+  { z: 5.4, y: 0.05, fov: 42 }, // fuel — starts pulled back to frame all three products, then zooms in below
 ]
 
 const FUEL_INDEX = 3
 /** How far the camera pushes in toward the shaker as the fuel scene scrolls. */
-const FUEL_ZOOM_IN = 1.0
+const FUEL_ZOOM_IN = 1.4
 
 export function CameraRig({ progress }: { progress: MotionValue<number> }) {
   const { camera } = useThree()

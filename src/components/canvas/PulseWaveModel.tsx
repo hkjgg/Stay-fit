@@ -1,7 +1,7 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import type { Group, Mesh, MeshBasicMaterial, Points } from 'three'
-import { AdditiveBlending, BufferAttribute } from 'three'
+import { AdditiveBlending, BufferAttribute, MathUtils } from 'three'
 import type { MotionValue } from 'framer-motion'
 import { rangeProgress, lerp, smoothstep, sceneVisibility } from '../../lib/scroll3d'
 import { applyGroupOpacity } from '../../lib/three-utils'
@@ -9,6 +9,8 @@ import { applyGroupOpacity } from '../../lib/three-utils'
 const ORANGE = '#ff5500'
 const BAR_COUNT = 40
 const SPAN = 2.7
+/** Damping rate for scroll-bound rotation — frame-rate independent, converges in ~250-350ms regardless of device fps. */
+const ROTATION_DAMP = 10
 
 function SpeedParticles({ count = 140 }: { count?: number }) {
   const points = useRef<Points>(null)
@@ -85,7 +87,8 @@ export function PulseWaveModel({
     const opacity = sceneVisibility(progress.get(), range)
     applyGroupOpacity(group.current, opacity)
 
-    group.current.rotation.y += delta * 0.15
+    // Rotation is purely a function of scroll progress (frame-rate-independent damping), not elapsed time.
+    group.current.rotation.y = MathUtils.damp(group.current.rotation.y, p * Math.PI * 1.4, ROTATION_DAMP, delta)
     group.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.08
     group.current.scale.setScalar(lerp(0.85, 1, smoothstep(p)))
 

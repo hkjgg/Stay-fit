@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import type { Group } from 'three'
+import { MathUtils, type Group } from 'three'
 import type { MotionValue } from 'framer-motion'
 import { rangeProgress, smoothstep, lerp, sceneVisibility } from '../../lib/scroll3d'
 import { applyGroupOpacity } from '../../lib/three-utils'
@@ -8,6 +8,9 @@ import { applyGroupOpacity } from '../../lib/three-utils'
 const STEEL = '#c7cad2'
 const CHROME = '#eef0f4'
 const RUBBER = '#141416'
+
+/** Damping rate for scroll-bound rotation — frame-rate independent, converges in ~250-350ms regardless of device fps. */
+const ROTATION_DAMP = 10
 
 const HANDLE_RADIUS = 0.1
 const KNURL_COUNT = 14
@@ -70,8 +73,9 @@ export function DumbbellModel({
     const opacity = sceneVisibility(progress.get(), range, { fadeIn })
     applyGroupOpacity(group.current, opacity)
 
-    group.current.rotation.y += delta * 0.35
-    group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.4) * 0.08
+    // Rotation is purely a function of scroll progress (frame-rate-independent damping), not elapsed time.
+    group.current.rotation.y = MathUtils.damp(group.current.rotation.y, p * Math.PI * 2, ROTATION_DAMP, delta)
+    group.current.rotation.x = Math.sin(p * Math.PI * 4) * 0.08
     group.current.position.y = Math.sin(state.clock.elapsedTime * 0.8) * 0.12
     const scale = lerp(0.85, 1, smoothstep(p))
     group.current.scale.setScalar(scale)

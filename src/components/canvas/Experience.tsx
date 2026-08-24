@@ -7,7 +7,7 @@ import { Lights } from './Lights'
 import { DumbbellModel } from './DumbbellModel'
 import { PowerRackModel } from './PowerRackModel'
 import { PulseWaveModel } from './PulseWaveModel'
-import { ShakerBottleModel } from './ShakerBottleModel'
+import { FuelProductsModel } from './FuelProductsModel'
 import { SCENES } from '../../lib/constants'
 
 const rangeOf = (id: string) => SCENES.find((s) => s.id === id)!.range
@@ -27,7 +27,7 @@ export function Experience({ progress }: { progress: MotionValue<number> }) {
         <DumbbellModel progress={progress} range={rangeOf('hero')} fadeIn={false} />
         <PowerRackModel progress={progress} range={rangeOf('heavy')} />
         <PulseWaveModel progress={progress} range={rangeOf('cardio')} />
-        <ShakerBottleModel progress={progress} range={rangeOf('fuel')} />
+        <FuelProductsModel progress={progress} range={rangeOf('fuel')} />
         <EffectComposer multisampling={0}>
           <Bloom intensity={0.9} luminanceThreshold={0.15} luminanceSmoothing={0.3} mipmapBlur />
           <Vignette eskil={false} offset={0.25} darkness={0.85} />

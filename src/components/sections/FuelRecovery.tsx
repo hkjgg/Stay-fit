@@ -24,7 +24,7 @@ export function FuelRecoveryBackdrop() {
       opacity={opacity}
       scale={scale}
       glow={glow}
-      videoSrc="/videos/VID_1.mp4"
+      videoSrc="/videos/VID_2.mp4"
       gradient="bg-[radial-gradient(ellipse_at_50%_45%,#062026_0%,#0b0b0e_70%)]"
       glass
     />
@@ -46,7 +46,7 @@ export function FuelRecoveryContent() {
       <div />
 
       <motion.div style={{ y: titleY }}>
-        <span className="glass mb-4 inline-flex items-center gap-2 rounded-full border border-cyan/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-cyan-soft">
+        <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan/40 bg-white/[0.04] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-cyan-soft backdrop-blur-2xl">
           Fuel &amp; Recovery Hub
         </span>
         <h2 className="font-display text-[10vw] leading-[0.88] text-bone sm:text-[5.5vw] md:text-[4.4vw]">
@@ -64,7 +64,7 @@ export function FuelRecoveryContent() {
             <motion.div
               key={product.name}
               whileHover={{ y: -6, borderColor: 'rgba(0,229,255,0.6)' }}
-              className="glass rounded-xl border border-cyan/25 px-4 py-4 text-left shadow-[0_0_24px_rgba(0,229,255,0.08)] transition"
+              className="rounded-xl border border-cyan/25 bg-white/[0.03] px-4 py-4 text-left shadow-[0_0_24px_rgba(0,229,255,0.08)] backdrop-blur-2xl transition"
             >
               <p className="text-sm font-semibold text-bone">{product.name}</p>
               <p className="mt-1 text-xs text-bone/50">{product.blurb}</p>
