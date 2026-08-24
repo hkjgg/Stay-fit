@@ -12,7 +12,7 @@ export function HeavyLiftingBackdrop() {
   return (
     <SceneBackdrop
       opacity={opacity}
-      videoSrc="/videos/heavy-lifting.mp4"
+      videoSrc="/videos/VID_2.mp4"
       gradient="bg-[radial-gradient(ellipse_at_20%_50%,#0d1a33_0%,#0b0b0e_70%)]"
     />
   )

@@ -11,7 +11,7 @@ export function SolariumBackdrop() {
   return (
     <SceneBackdrop
       opacity={opacity}
-      videoSrc="/videos/solarium.mp4"
+      videoSrc="/videos/VID_2.mp4"
       gradient="bg-[radial-gradient(ellipse_at_50%_60%,#0d1a33_0%,#1a0d05_55%,#0b0b0e_85%)]"
     />
   )

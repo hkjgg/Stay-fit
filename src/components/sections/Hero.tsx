@@ -11,7 +11,7 @@ export function HeroBackdrop() {
   return (
     <SceneBackdrop
       opacity={opacity}
-      videoSrc="/videos/gym-tour.mp4"
+      videoSrc="/videos/VID_1.mp4"
       gradient="bg-[radial-gradient(ellipse_at_50%_30%,#1a1a20_0%,#0b0b0e_65%)]"
     />
   )

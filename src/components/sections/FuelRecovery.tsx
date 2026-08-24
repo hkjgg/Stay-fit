@@ -18,7 +18,7 @@ export function FuelRecoveryBackdrop() {
   return (
     <SceneBackdrop
       opacity={opacity}
-      videoSrc="/videos/fuel-bar.mp4"
+      videoSrc="/videos/VID_1.mp4"
       gradient="bg-[radial-gradient(ellipse_at_50%_45%,#062026_0%,#0b0b0e_70%)]"
       glass
     />

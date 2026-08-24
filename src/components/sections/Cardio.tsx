@@ -16,7 +16,7 @@ export function CardioBackdrop() {
   return (
     <SceneBackdrop
       opacity={opacity}
-      videoSrc="/videos/cardio.mp4"
+      videoSrc="/videos/VID_1.mp4"
       gradient="bg-[radial-gradient(ellipse_at_80%_50%,#331a0d_0%,#0b0b0e_70%)]"
     />
   )
