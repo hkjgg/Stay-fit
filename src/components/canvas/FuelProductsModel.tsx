@@ -13,6 +13,8 @@ const CYAN = '#00e5ff'
 const ORANGE = '#ff5500'
 const PLASTIC_WHITE = '#efeee6'
 const PLASTIC_BLACK = '#17181c'
+/** Exact rim-light cyan requested for the counter surface — a hair brighter than the site's usual accent cyan. */
+const RIM_CYAN = '#00f3ff'
 /** Damping rate for scroll-bound rotation — frame-rate independent, converges in ~250-350ms regardless of device fps. */
 const ROTATION_DAMP = 10
 
@@ -27,6 +29,22 @@ function Scoop({ position }: { position: [number, number, number] }) {
       <mesh position={[0.14, 0.02, 0]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[0.014, 0.014, 0.16, 10]} />
         <meshStandardMaterial color={PLASTIC_WHITE} roughness={0.35} metalness={0.05} />
+      </mesh>
+    </group>
+  )
+}
+
+/** Dark glass-topped counter the products sit on, edged with a cyan rim-light strip. */
+function Counter() {
+  return (
+    <group position={[0.35, -0.85, 0.1]}>
+      <mesh receiveShadow>
+        <boxGeometry args={[2.6, 0.06, 1.0]} />
+        <meshStandardMaterial color="#0c0d10" roughness={0.25} metalness={0.4} />
+      </mesh>
+      <mesh position={[0, 0.031, 0.42]}>
+        <boxGeometry args={[2.6, 0.008, 0.02]} />
+        <meshStandardMaterial color={RIM_CYAN} emissive={RIM_CYAN} emissiveIntensity={2.4} toneMapped={false} />
       </mesh>
     </group>
   )
@@ -87,9 +105,11 @@ export function FuelProductsModel({
   })
 
   return (
-    <group ref={group} position={[0, -0.15, 0]}>
+    <group ref={group} position={[0.85, -0.15, 0]}>
+      <Counter />
+
       {/* Shaker bottle */}
-      <group ref={shaker} position={[-1.0, 0, 0]}>
+      <group ref={shaker} position={[-0.5, 0, 0]}>
         <mesh position={[0, 0.15, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[0.38, 0.34, 1.4, 32]} />
           <meshStandardMaterial color={MATTE_BLACK} roughness={0.65} metalness={0.25} />
@@ -130,7 +150,7 @@ export function FuelProductsModel({
       </group>
 
       {/* Micro Creatine tub — compact, orange accent band */}
-      <group ref={creatine} position={[0.02, -0.28, 0]}>
+      <group ref={creatine} position={[0.1, -0.28, 0]}>
         <mesh position={[0, 0.28, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[0.26, 0.24, 0.62, 32]} />
           <meshStandardMaterial color={PLASTIC_WHITE} roughness={0.4} metalness={0.06} />
@@ -147,7 +167,7 @@ export function FuelProductsModel({
       </group>
 
       {/* Vegan Protein tub — tall, cyan accent band */}
-      <group ref={protein} position={[0.92, -0.1, 0]}>
+      <group ref={protein} position={[0.62, -0.1, 0]}>
         <mesh position={[0, 0.35, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[0.4, 0.37, 1.15, 32]} />
           <meshStandardMaterial color={PLASTIC_BLACK} roughness={0.42} metalness={0.08} />

@@ -25,25 +25,37 @@ export function HeroBackdrop() {
 export function HeroContent() {
   const opacity = useSceneOpacity(...RANGE, 0.25, false)
   const local = useSceneLocalProgress(...RANGE)
-  const titleY = useTransform(local, (t) => lerp(30, 0, smoothstep(rangeProgress(t, 0, 0.3))))
+
+  // Docks the wordmark from center-stage to a top-left mark over the first
+  // 40% of the hero scroll, then holds — the indicator reveals once docked.
+  const dock = useTransform(local, (t) => smoothstep(rangeProgress(t, 0, 0.4)))
+  const titleTop = useTransform(dock, (d) => `${lerp(50, 8, d)}%`)
+  const titleLeft = useTransform(dock, (d) => `${lerp(50, 6, d)}%`)
+  const titleTranslateX = useTransform(dock, (d) => `${lerp(-50, 0, d)}%`)
+  const titleTranslateY = useTransform(dock, (d) => `${lerp(-50, 0, d)}%`)
+  const titleScale = useTransform(dock, (d) => lerp(1, 0.4, d))
+  const indicatorOpacity = useTransform(dock, [0.75, 1], [0, 1])
 
   return (
-    <motion.div
-      style={{ opacity }}
-      className="absolute inset-0 flex h-full w-full flex-col items-center justify-center px-6 text-center"
-    >
-      <motion.div
-        style={{ y: titleY }}
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-        className="rounded-[2.5rem] border border-cyan/25 bg-obsidian/10 px-10 py-8 backdrop-blur-xl [box-shadow:0_0_50px_rgba(0,229,255,0.12)] sm:px-16 sm:py-10"
+    <motion.div style={{ opacity }} className="absolute inset-0 h-full w-full">
+      <motion.h1
+        style={{ top: titleTop, left: titleLeft, x: titleTranslateX, y: titleTranslateY, scale: titleScale }}
+        className="absolute whitespace-nowrap font-display text-[18vw] leading-[0.85] text-transparent [-webkit-text-stroke:1.5px_rgba(245,243,238,0.9)] [text-shadow:0_0_25px_rgba(255,85,0,0.4),0_0_55px_rgba(0,229,255,0.3)] sm:text-[13vw] md:text-[10vw]"
       >
-        <h1 className="font-display text-[18vw] leading-[0.85] text-transparent [-webkit-text-stroke:1.5px_rgba(245,243,238,0.9)] [text-shadow:0_0_25px_rgba(255,85,0,0.4),0_0_55px_rgba(0,229,255,0.3)] sm:text-[13vw] md:text-[10vw]">
-          STAY FIT
-        </h1>
-        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.5em] text-bone/80 sm:text-sm">
-          Borj El Barajneh
-        </p>
+        STAY FIT
+      </motion.h1>
+
+      <motion.div
+        style={{ opacity: indicatorOpacity, top: '20%', left: '6%' }}
+        className="absolute flex flex-col gap-2"
+      >
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-bone/85 sm:text-sm">
+          <span className="h-1.5 w-1.5 shrink-0 animate-pulse-slow rounded-full bg-cyan" />
+          Open Now &middot; 06:00 AM &ndash; 12:00 AM
+        </div>
+        <div className="text-[10px] uppercase tracking-[0.3em] text-bone/40">
+          Scroll to Explore Zones &darr;
+        </div>
       </motion.div>
     </motion.div>
   )
