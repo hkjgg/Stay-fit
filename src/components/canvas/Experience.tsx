@@ -5,8 +5,8 @@ import type { MotionValue } from 'framer-motion'
 import { CameraRig } from './CameraRig'
 import { Lights } from './Lights'
 import { DumbbellModel } from './DumbbellModel'
-import { BarbellModel } from './BarbellModel'
-import { CardioMesh } from './CardioMesh'
+import { PowerRackModel } from './PowerRackModel'
+import { PulseWaveModel } from './PulseWaveModel'
 import { ShakerBottleModel } from './ShakerBottleModel'
 import { SCENES } from '../../lib/constants'
 
@@ -25,8 +25,8 @@ export function Experience({ progress }: { progress: MotionValue<number> }) {
         <CameraRig progress={progress} />
         <Lights progress={progress} />
         <DumbbellModel progress={progress} range={rangeOf('hero')} fadeIn={false} />
-        <BarbellModel progress={progress} range={rangeOf('heavy')} />
-        <CardioMesh progress={progress} range={rangeOf('cardio')} />
+        <PowerRackModel progress={progress} range={rangeOf('heavy')} />
+        <PulseWaveModel progress={progress} range={rangeOf('cardio')} />
         <ShakerBottleModel progress={progress} range={rangeOf('fuel')} />
         <EffectComposer multisampling={0}>
           <Bloom intensity={0.9} luminanceThreshold={0.15} luminanceSmoothing={0.3} mipmapBlur />

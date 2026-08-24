@@ -36,11 +36,12 @@ export function HeroContent() {
         style={{ y: titleY }}
         animate={{ y: [0, -10, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        className="rounded-[2.5rem] border border-cyan/25 bg-obsidian/10 px-10 py-8 backdrop-blur-xl [box-shadow:0_0_50px_rgba(0,229,255,0.12)] sm:px-16 sm:py-10"
       >
-        <h1 className="font-display mix-blend-overlay text-[18vw] leading-[0.85] text-bone sm:text-[13vw] md:text-[10vw]">
+        <h1 className="font-display text-[18vw] leading-[0.85] text-transparent [-webkit-text-stroke:1.5px_rgba(245,243,238,0.9)] [text-shadow:0_0_25px_rgba(255,85,0,0.4),0_0_55px_rgba(0,229,255,0.3)] sm:text-[13vw] md:text-[10vw]">
           STAY FIT
         </h1>
-        <p className="mix-blend-overlay mt-4 text-xs font-semibold uppercase tracking-[0.5em] text-bone sm:text-sm">
+        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.5em] text-bone/80 sm:text-sm">
           Borj El Barajneh
         </p>
       </motion.div>
