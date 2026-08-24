@@ -18,6 +18,7 @@ export function HeroBackdrop() {
       glow={glow}
       videoSrc="/videos/VID_1.mp4"
       gradient="bg-[radial-gradient(ellipse_at_50%_30%,#1a1a20_0%,#0b0b0e_65%)]"
+      clear
     />
   )
 }
@@ -40,7 +41,7 @@ export function HeroContent() {
     <motion.div style={{ opacity }} className="absolute inset-0 h-full w-full">
       <motion.h1
         style={{ top: titleTop, left: titleLeft, x: titleTranslateX, y: titleTranslateY, scale: titleScale }}
-        className="absolute whitespace-nowrap font-display text-[18vw] leading-[0.85] text-transparent [-webkit-text-stroke:1.5px_rgba(245,243,238,0.9)] [text-shadow:0_0_25px_rgba(255,85,0,0.4),0_0_55px_rgba(0,229,255,0.3)] sm:text-[13vw] md:text-[10vw]"
+        className="absolute whitespace-nowrap rounded-3xl border border-bone/10 bg-white/[0.04] px-6 py-2 font-display text-[18vw] leading-[0.85] text-transparent backdrop-blur-[4px] [-webkit-text-stroke:1.5px_rgba(245,243,238,0.92)] [text-shadow:0_0_25px_rgba(255,85,0,0.4),0_0_55px_rgba(0,229,255,0.3)] sm:text-[13vw] md:text-[10vw]"
       >
         STAY FIT
       </motion.h1>

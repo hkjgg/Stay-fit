@@ -12,6 +12,9 @@ interface SceneBackdropProps {
   className?: string
   /** Frosts the video/gradient with a backdrop-blurred glass panel (glassmorphism zones). */
   glass?: boolean
+  /** Skips the heavy cinematic scrim stack for an ultra-clear video read (Hero), keeping
+   *  only a thin obsidian vignette at the extreme edges so the center stays fully transparent. */
+  clear?: boolean
 }
 
 /** Cinematic playback speed — a touch of slow motion reads as higher production value than 1x raw footage. */
@@ -40,6 +43,7 @@ export function SceneBackdrop({
   gradient,
   className = '',
   glass = false,
+  clear = false,
 }: SceneBackdropProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const playing = useRef(false)
@@ -74,7 +78,7 @@ export function SceneBackdrop({
         onLoadedMetadata={(e) => {
           e.currentTarget.playbackRate = PLAYBACK_RATE
         }}
-        className="absolute inset-0 h-full w-full object-cover opacity-60 mix-blend-luminosity"
+        className={`absolute inset-0 h-full w-full object-cover ${clear ? 'opacity-100' : 'opacity-60 mix-blend-luminosity'}`}
         src={videoSrc}
         loop
         muted
@@ -82,13 +86,21 @@ export function SceneBackdrop({
         preload="metadata"
       />
 
-      {/* Cinematic grade: radial obsidian vignette (multiply) + soft warm grade pass. */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_38%,rgba(11,11,14,0.95)_100%)] mix-blend-multiply" />
-      <div className="absolute inset-0 bg-gradient-to-br from-obsidian/50 via-transparent to-obsidian/60 mix-blend-soft-light" />
+      {clear ? (
+        // Ultra-thin obsidian vignette at the extreme edges only — center stays fully clear
+        // so the video (heavy gym machinery in action) reads with no visual obstruction.
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_72%,rgba(11,11,14,0.6)_100%)]" />
+      ) : (
+        <>
+          {/* Cinematic grade: radial obsidian vignette (multiply) + soft warm grade pass. */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_38%,rgba(11,11,14,0.95)_100%)] mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gradient-to-br from-obsidian/50 via-transparent to-obsidian/60 mix-blend-soft-light" />
 
-      {glass && <div className="absolute inset-0 bg-obsidian/20 backdrop-blur-2xl" />}
-      <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/40 to-obsidian/70" />
-      <div className="absolute inset-0 bg-obsidian/25" />
+          {glass && <div className="absolute inset-0 bg-obsidian/20 backdrop-blur-2xl" />}
+          <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/40 to-obsidian/70" />
+          <div className="absolute inset-0 bg-obsidian/25" />
+        </>
+      )}
 
       {/* Transition glow: soft cyan bloom that pulses in during scene cross-fades. */}
       <motion.div

@@ -4,7 +4,6 @@ import { EffectComposer, Bloom, Vignette, Noise } from '@react-three/postprocess
 import type { MotionValue } from 'framer-motion'
 import { CameraRig } from './CameraRig'
 import { Lights } from './Lights'
-import { DumbbellModel } from './DumbbellModel'
 import { PowerRackModel } from './PowerRackModel'
 import { PulseWaveModel } from './PulseWaveModel'
 import { FuelProductsModel } from './FuelProductsModel'
@@ -24,7 +23,6 @@ export function Experience({ progress }: { progress: MotionValue<number> }) {
       <Suspense fallback={null}>
         <CameraRig progress={progress} />
         <Lights progress={progress} />
-        <DumbbellModel progress={progress} range={rangeOf('hero')} fadeIn={false} />
         <PowerRackModel progress={progress} range={rangeOf('heavy')} />
         <PulseWaveModel progress={progress} range={rangeOf('cardio')} />
         <FuelProductsModel progress={progress} range={rangeOf('fuel')} />
