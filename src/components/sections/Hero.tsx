@@ -74,15 +74,16 @@ export function HeroContent() {
   const opacity = useSceneOpacity(...RANGE, 0.25, false)
   const local = useSceneLocalProgress(...RANGE)
 
-  // Docks the wordmark from center-stage to a top-left mark over the first
-  // 40% of the hero scroll, then holds — the indicator reveals once docked.
+  // Docks the wordmark from center-stage to the upper-center of the screen
+  // (top: 20%, still horizontally centered) over the first 40% of the hero
+  // scroll, then holds — the indicator reveals once docked. Left/x/y stay
+  // constant throughout since the wordmark is centered both before and
+  // after docking; only `top` (and scale) actually animate.
   const dock = useTransform(local, (t) => smoothstep(rangeProgress(t, 0, 0.4)))
-  const titleTop = useTransform(dock, (d) => `${lerp(50, 8, d)}%`)
-  const titleLeft = useTransform(dock, (d) => `${lerp(50, 6, d)}%`)
-  const titleTranslateX = useTransform(dock, (d) => `${lerp(-50, 0, d)}%`)
-  const titleTranslateY = useTransform(dock, (d) => `${lerp(-50, 0, d)}%`)
-  // Docked scale is larger than before (0.55 vs. the old 0.4) so the wordmark
-  // stays clearly readable once pinned top-left.
+  const titleTop = useTransform(dock, (d) => `${lerp(50, 20, d)}%`)
+  // Docked scale is larger than a corner mark would need, since the title
+  // stays centered with room either side rather than being squeezed into a
+  // left margin.
   const titleScale = useTransform(dock, (d) => lerp(1, 0.55, d))
   const subheadOpacity = useTransform(dock, [0.55, 0.85], [0, 1])
   const indicatorOpacity = useTransform(dock, [0.8, 1], [0, 1])
@@ -92,11 +93,10 @@ export function HeroContent() {
       <motion.h1
         style={{
           top: titleTop,
-          left: titleLeft,
-          x: titleTranslateX,
-          y: titleTranslateY,
+          left: '50%',
+          x: '-50%',
+          y: '-50%',
           scale: titleScale,
-          transformOrigin: 'top left',
         }}
         animate={{
           textShadow: [
@@ -111,16 +111,20 @@ export function HeroContent() {
         STAY FIT
       </motion.h1>
 
-      {/* Sub-headline cycler sits directly under the docked wordmark. */}
-      <motion.div style={{ opacity: subheadOpacity, top: '19%', left: '6%' }} className="absolute">
+      {/* Middle: neon line + sub-text cycler, centered under the docked title
+          with clear margin (title's docked box bottom sits well above 27%). */}
+      <motion.div
+        style={{ opacity: subheadOpacity, top: '27%', left: '50%', x: '-50%' }}
+        className="absolute"
+      >
         <SubheadCycler />
       </motion.div>
 
-      {/* Positioned well clear of the docked title's larger footprint (0.55 scale,
-          top-left anchored) so nothing ever overlaps once everything is settled. */}
+      {/* Bottom: generously spaced below the sub-text row so nothing ever
+          crowds once everything is docked and settled. */}
       <motion.div
-        style={{ opacity: indicatorOpacity, top: '30%', left: '6%' }}
-        className="absolute flex flex-col items-start gap-3"
+        style={{ opacity: indicatorOpacity, top: '40%', left: '50%', x: '-50%' }}
+        className="absolute flex flex-col items-center gap-3"
       >
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-bone/85 sm:text-sm">
           <span className="h-1.5 w-1.5 shrink-0 animate-pulse-slow rounded-full bg-cyan" />
