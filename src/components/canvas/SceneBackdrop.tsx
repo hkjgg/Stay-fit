@@ -5,8 +5,9 @@ interface SceneBackdropProps {
   opacity: MotionValue<number>
   /** Parallax dolly: video scales down from ~1.08 to 1.0 across the scene. */
   scale: MotionValue<number>
-  /** 0-1 cyan glow intensity, peaking during cross-fades at the scene edges. */
-  glow: MotionValue<number>
+  /** 0-1 cyan glow intensity, peaking during cross-fades at the scene edges. Omit to
+   *  skip the bloom layer entirely (the hero has no prior scene to cross-fade from). */
+  glow?: MotionValue<number>
   videoSrc: string
   gradient: string
   className?: string
@@ -15,10 +16,14 @@ interface SceneBackdropProps {
   /** Skips the heavy cinematic scrim stack for an ultra-clear video read (Hero), keeping
    *  only a thin obsidian vignette at the extreme edges so the center stays fully transparent. */
   clear?: boolean
+  /** Playback speed — a touch of slow motion reads as higher production value than 1x raw
+   *  footage. Varying this per section (alongside frameOffset) keeps two shared source
+   *  clips from feeling identical everywhere they're reused. */
+  playbackRate?: number
+  /** Seconds to seek into the clip on load, so different sections open on a different
+   *  frame of the same source video instead of all starting in lockstep. */
+  frameOffset?: number
 }
-
-/** Cinematic playback speed — a touch of slow motion reads as higher production value than 1x raw footage. */
-const PLAYBACK_RATE = 0.85
 
 /**
  * Looping video layer with a themed gradient fallback underneath (shown
@@ -44,6 +49,8 @@ export function SceneBackdrop({
   className = '',
   glass = false,
   clear = false,
+  playbackRate = 0.85,
+  frameOffset = 0,
 }: SceneBackdropProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const playing = useRef(false)
@@ -76,7 +83,11 @@ export function SceneBackdrop({
         ref={videoRef}
         style={{ scale }}
         onLoadedMetadata={(e) => {
-          e.currentTarget.playbackRate = PLAYBACK_RATE
+          const v = e.currentTarget
+          v.playbackRate = playbackRate
+          if (frameOffset > 0 && frameOffset < (v.duration || Infinity)) {
+            v.currentTime = frameOffset
+          }
         }}
         className={`absolute inset-0 h-full w-full object-cover ${clear ? 'opacity-100' : 'opacity-60 mix-blend-luminosity'}`}
         src={videoSrc}
@@ -103,10 +114,12 @@ export function SceneBackdrop({
       )}
 
       {/* Transition glow: soft cyan bloom that pulses in during scene cross-fades. */}
-      <motion.div
-        style={{ opacity: glow }}
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,229,255,0.35),transparent_65%)] blur-3xl"
-      />
+      {glow && (
+        <motion.div
+          style={{ opacity: glow }}
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,229,255,0.35),transparent_65%)] blur-3xl"
+        />
+      )}
     </motion.div>
   )
 }

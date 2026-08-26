@@ -20,16 +20,19 @@ const PRODUCTS = [
  * procedural, not a literal reproduction of any brand's real packaging or
  * label art (no texture/decal pipeline in this project). Floats on its own
  * loop via Framer Motion and sits on the counter with a cyan/lime rim glow.
+ * Hovering reveals a glassmorphism stat card above the plate.
  */
 function ProductPlate({
   name,
   spec,
+  stats,
   accent,
   height,
   delay,
 }: {
   name: string
   spec: string
+  stats: [string, string]
   accent: string
   height: string
   delay: number
@@ -38,10 +41,20 @@ function ProductPlate({
     <motion.div
       animate={{ y: [0, -12, 0] }}
       transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay }}
-      className="flex w-28 flex-col items-center"
+      className="group relative flex w-28 flex-col items-center"
     >
       <div
-        className="relative w-full overflow-hidden rounded-2xl border backdrop-blur-md"
+        className="glass pointer-events-none absolute -top-3 left-1/2 z-10 w-44 -translate-x-1/2 -translate-y-full rounded-xl border px-3 py-2.5 text-center opacity-0 backdrop-blur-md transition duration-300 group-hover:opacity-100"
+        style={{ borderColor: `${accent}66`, boxShadow: `0 0 26px ${accent}45` }}
+      >
+        <p className="text-[10px] font-semibold uppercase leading-tight tracking-wide" style={{ color: accent }}>
+          {stats[0]}
+        </p>
+        <p className="mt-1 text-[10px] leading-tight text-bone/60">{stats[1]}</p>
+      </div>
+
+      <div
+        className="relative w-full overflow-hidden rounded-2xl border backdrop-blur-md transition duration-300 group-hover:scale-105"
         style={{ height, borderColor: `${accent}66`, boxShadow: `0 0 28px ${accent}40` }}
       >
         <div className="absolute inset-x-0 top-0 h-3" style={{ background: accent, boxShadow: `0 0 12px ${accent}` }} />
@@ -73,9 +86,23 @@ function Counter() {
 function ProductShowcase() {
   return (
     <div className="hidden flex-col items-center md:flex">
-      <div className="flex items-end gap-8">
-        <ProductPlate name="PR Lifestyle Micro Creatine" spec="Pure micronized" accent={RIM_CYAN} height="7rem" delay={0} />
-        <ProductPlate name="BPI Sports Vegan Protein" spec="27g plant protein" accent={LIME} height="9.5rem" delay={0.7} />
+      <div className="flex items-end gap-8 pt-16">
+        <ProductPlate
+          name="PR Lifestyle Micro Creatine"
+          spec="Pure micronized"
+          stats={['Pure Micronized Monohydrate', '5g per serving · zero fillers']}
+          accent={RIM_CYAN}
+          height="7rem"
+          delay={0}
+        />
+        <ProductPlate
+          name="BPI Sports Vegan Protein"
+          spec="27g plant protein"
+          stats={['Plant-Based Muscle Recovery', '27g protein per scoop']}
+          accent={LIME}
+          height="9.5rem"
+          delay={0.7}
+        />
       </div>
       <Counter />
     </div>

@@ -1,6 +1,7 @@
 import { motion, useTransform, type MotionValue } from 'framer-motion'
 import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRange'
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
+import { DynamicVideo } from '../canvas/DynamicVideo'
 import { rangeProgress, smoothstep, lerp, edgeGlow } from '../../lib/scroll3d'
 import { sceneRange } from '../../lib/constants'
 
@@ -8,6 +9,8 @@ const RANGE = sceneRange('heavy')
 const FEATURES = ['Olympic Platforms', 'Free Weights to 50kg', 'Power Racks & Chains', 'Bodycore Coaching']
 const LIME = '#39ff14'
 const CYAN = '#00f3ff'
+/** High-contrast black-and-steel grade for this zone's footage. */
+const STEEL_FILTER = 'contrast-125 grayscale-[35%] brightness-75'
 
 export function HeavyLiftingBackdrop() {
   const opacity = useSceneOpacity(...RANGE)
@@ -21,22 +24,36 @@ export function HeavyLiftingBackdrop() {
       glow={glow}
       videoSrc="/videos/VID_2.mp4"
       gradient="bg-[radial-gradient(ellipse_at_20%_50%,#0d1a33_0%,#0b0b0e_70%)]"
+      playbackRate={1.05}
+      frameOffset={2}
     />
   )
 }
 
 interface ShowcasePanelProps {
   local: MotionValue<number>
+  videoSrc: string
   objectPosition: string
   parallax: [number, number]
   glowColor: string
   delay: number
+  playbackRate: number
+  frameOffset: number
 }
 
 /** One vertical tile in the split-screen showcase: a cropped, looping slice of
  *  real gym footage that drifts on its own scroll-parallax offset and carries
  *  a neon rim border — a real-footage stand-in for the old power-rack mesh. */
-function ShowcasePanel({ local, objectPosition, parallax, glowColor, delay }: ShowcasePanelProps) {
+function ShowcasePanel({
+  local,
+  videoSrc,
+  objectPosition,
+  parallax,
+  glowColor,
+  delay,
+  playbackRate,
+  frameOffset,
+}: ShowcasePanelProps) {
   const reveal = useTransform(local, (t) => smoothstep(rangeProgress(t, delay, delay + 0.35)))
   const y = useTransform(local, (t) => `${lerp(parallax[0], parallax[1], t)}%`)
   const scale = useTransform(reveal, (r) => lerp(0.92, 1, r))
@@ -46,14 +63,12 @@ function ShowcasePanel({ local, objectPosition, parallax, glowColor, delay }: Sh
       style={{ opacity: reveal, scale, y, borderColor: `${glowColor}55`, boxShadow: `0 0 32px ${glowColor}33` }}
       className="relative aspect-3/4 w-full overflow-hidden rounded-2xl border"
     >
-      <video
-        className="h-full w-full object-cover contrast-125 grayscale-[35%] brightness-75"
-        style={{ objectPosition }}
-        src="/videos/VID_2.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
+      <DynamicVideo
+        videoSrc={videoSrc}
+        playbackRate={playbackRate}
+        frameOffset={frameOffset}
+        filterClassName={STEEL_FILTER}
+        objectPosition={objectPosition}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-obsidian/85 via-transparent to-obsidian/20" />
       <div
@@ -65,16 +80,45 @@ function ShowcasePanel({ local, objectPosition, parallax, glowColor, delay }: Sh
 }
 
 /** Interactive split-screen showcase: three real-footage tiles standing in for
- *  the old power-rack/barbell mesh, each with its own parallax drift. */
+ *  the old power-rack/barbell mesh, each with its own parallax drift, playback
+ *  speed, and frame offset so the shared source clip reads differently in each. */
 function ShowcaseGrid({ local }: { local: MotionValue<number> }) {
+  const videoSrc = '/videos/VID_2.mp4'
   return (
     <div className="hidden w-full max-w-md grid-cols-2 gap-4 md:grid">
       <div className="col-span-1 grid gap-4">
-        <ShowcasePanel local={local} objectPosition="15% 20%" parallax={[6, -6]} glowColor={CYAN} delay={0} />
-        <ShowcasePanel local={local} objectPosition="70% 60%" parallax={[-4, 8]} glowColor={LIME} delay={0.12} />
+        <ShowcasePanel
+          local={local}
+          videoSrc={videoSrc}
+          objectPosition="15% 20%"
+          parallax={[6, -6]}
+          glowColor={CYAN}
+          delay={0}
+          playbackRate={1}
+          frameOffset={0}
+        />
+        <ShowcasePanel
+          local={local}
+          videoSrc={videoSrc}
+          objectPosition="70% 60%"
+          parallax={[-4, 8]}
+          glowColor={LIME}
+          delay={0.12}
+          playbackRate={1.15}
+          frameOffset={1.5}
+        />
       </div>
       <div className="col-span-1 grid pt-10">
-        <ShowcasePanel local={local} objectPosition="45% 85%" parallax={[10, -10]} glowColor={CYAN} delay={0.22} />
+        <ShowcasePanel
+          local={local}
+          videoSrc={videoSrc}
+          objectPosition="45% 85%"
+          parallax={[10, -10]}
+          glowColor={CYAN}
+          delay={0.22}
+          playbackRate={0.9}
+          frameOffset={3}
+        />
       </div>
     </div>
   )

@@ -2,9 +2,12 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { REELS } from '../../data/reels'
 import { ReelModal } from '../ui/ReelModal'
+import { DynamicVideo } from '../canvas/DynamicVideo'
 
 const CYAN = '#00f3ff'
 const LIME = '#39ff14'
+/** Two alternating grades so neighboring cards sharing a source clip still read distinct. */
+const FILTER_PRESETS = ['contrast-110 saturate-125 brightness-95', 'contrast-110 saturate-110 brightness-90']
 
 export function ReelsGrid() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
@@ -59,13 +62,11 @@ export function ReelsGrid() {
                 animate={{ flexGrow: isHovered ? 2.2 : 1, boxShadow: isHovered ? `0 0 40px ${accent}55` : `0 0 0px ${accent}00` }}
                 className="group relative aspect-9/16 min-w-[110px] shrink-0 flex-1 snap-start overflow-hidden rounded-2xl bg-obsidian-soft text-left ring-1 ring-bone/10 transition-shadow"
               >
-                <video
-                  className="absolute inset-0 h-full w-full object-cover"
-                  src={reel.video}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
+                <DynamicVideo
+                  videoSrc={reel.video}
+                  playbackRate={reel.playbackRate}
+                  frameOffset={reel.frameOffset}
+                  filterClassName={FILTER_PRESETS[i % FILTER_PRESETS.length]}
                 />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(11,11,14,0.9)_100%)]" />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-obsidian via-obsidian/70 to-transparent p-3">
