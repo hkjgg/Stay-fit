@@ -1,4 +1,5 @@
-import { motion, useTransform } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion, useTransform } from 'framer-motion'
 import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRange'
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
 import { HeroDust } from '../canvas/HeroDust'
@@ -6,6 +7,46 @@ import { rangeProgress, smoothstep, lerp } from '../../lib/scroll3d'
 import { sceneRange } from '../../lib/constants'
 
 const RANGE = sceneRange('hero')
+const CYAN = '#00f3ff'
+const SUBHEADS = ['MAXIMUM POWER', 'ULTIMATE TECH', 'PURE ATHLETICS']
+
+/** Cycles through the sub-headlines with a subtle expanding accent line
+ *  that redraws on each flip, directly under the docked wordmark. */
+function SubheadCycler() {
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => setIndex((i) => (i + 1) % SUBHEADS.length), 2600)
+    return () => clearInterval(id)
+  }, [])
+
+  return (
+    <div className="flex items-center gap-3">
+      <motion.span
+        key={`line-${index}`}
+        initial={{ width: 0, opacity: 0 }}
+        animate={{ width: 28, opacity: 1 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+        className="h-px shrink-0 bg-cyan"
+        style={{ boxShadow: `0 0 8px ${CYAN}` }}
+      />
+      <div className="relative h-[1.4em] overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={SUBHEADS[index]}
+            initial={{ y: 14, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -14, opacity: 0 }}
+            transition={{ duration: 0.45, ease: 'easeInOut' }}
+            className="block whitespace-nowrap text-xs font-semibold uppercase tracking-[0.25em] text-cyan-soft"
+          >
+            {SUBHEADS[index]}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+    </div>
+  )
+}
 
 export function HeroBackdrop() {
   const opacity = useSceneOpacity(...RANGE, 0.25, false)
@@ -43,7 +84,8 @@ export function HeroContent() {
   // Docked scale is larger than before (0.55 vs. the old 0.4) so the wordmark
   // stays clearly readable once pinned top-left.
   const titleScale = useTransform(dock, (d) => lerp(1, 0.55, d))
-  const indicatorOpacity = useTransform(dock, [0.75, 1], [0, 1])
+  const subheadOpacity = useTransform(dock, [0.55, 0.85], [0, 1])
+  const indicatorOpacity = useTransform(dock, [0.8, 1], [0, 1])
 
   return (
     <motion.div style={{ opacity }} className="absolute inset-0 h-full w-full">
@@ -57,30 +99,49 @@ export function HeroContent() {
           transformOrigin: 'top left',
         }}
         animate={{
-          boxShadow: [
-            '0 0 20px rgba(0,243,255,0.15)',
-            '0 0 48px rgba(0,243,255,0.45)',
-            '0 0 20px rgba(0,243,255,0.15)',
+          textShadow: [
+            '0 0 18px rgba(0,243,255,0.35), 0 0 42px rgba(0,243,255,0.15)',
+            '0 0 34px rgba(0,243,255,0.8), 0 0 72px rgba(0,243,255,0.4)',
+            '0 0 18px rgba(0,243,255,0.35), 0 0 42px rgba(0,243,255,0.15)',
           ],
         }}
-        transition={{ boxShadow: { duration: 2.6, repeat: Infinity, ease: 'easeInOut' } }}
-        className="absolute whitespace-nowrap rounded-3xl border border-bone/10 bg-white/[0.04] px-6 py-2 font-display text-[18vw] leading-[0.85] text-transparent backdrop-blur-[4px] [-webkit-text-stroke:1.5px_rgba(245,243,238,0.92)] [text-shadow:0_0_25px_rgba(255,85,0,0.4),0_0_55px_rgba(0,229,255,0.3)] sm:text-[13vw] md:text-[10vw]"
+        transition={{ textShadow: { duration: 2.6, repeat: Infinity, ease: 'easeInOut' } }}
+        className="absolute whitespace-nowrap rounded-3xl border border-bone/10 bg-white/[0.04] px-6 py-2 font-display text-[18vw] leading-[0.85] text-transparent shadow-[0_0_24px_rgba(0,243,255,0.15)] backdrop-blur-[4px] [-webkit-text-stroke:1.5px_rgba(245,243,238,0.92)] sm:text-[13vw] md:text-[10vw]"
       >
         STAY FIT
       </motion.h1>
 
+      {/* Sub-headline cycler sits directly under the docked wordmark. */}
+      <motion.div style={{ opacity: subheadOpacity, top: '19%', left: '6%' }} className="absolute">
+        <SubheadCycler />
+      </motion.div>
+
       {/* Positioned well clear of the docked title's larger footprint (0.55 scale,
-          top-left anchored) so the two never overlap once both are settled. */}
+          top-left anchored) so nothing ever overlaps once everything is settled. */}
       <motion.div
         style={{ opacity: indicatorOpacity, top: '30%', left: '6%' }}
-        className="absolute flex flex-col gap-2"
+        className="absolute flex flex-col items-start gap-3"
       >
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-bone/85 sm:text-sm">
           <span className="h-1.5 w-1.5 shrink-0 animate-pulse-slow rounded-full bg-cyan" />
           Open Now &middot; 06:00 AM &ndash; 12:00 AM
         </div>
-        <div className="text-[10px] uppercase tracking-[0.3em] text-bone/40">
-          Scroll to Explore Zones &darr;
+
+        <div
+          className="flex items-center gap-2 rounded-full border border-cyan/40 bg-white/[0.06] px-4 py-2 backdrop-blur-md"
+          style={{ boxShadow: `0 0 26px ${CYAN}40` }}
+        >
+          <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-bone">
+            Scroll to Explore Zones
+          </span>
+          <motion.span
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+            className="text-cyan"
+            style={{ textShadow: `0 0 10px ${CYAN}` }}
+          >
+            &darr;
+          </motion.span>
         </div>
       </motion.div>
     </motion.div>
