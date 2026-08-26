@@ -1,6 +1,5 @@
 import { motion, useTransform, type MotionValue } from 'framer-motion'
 import { ScrollSceneProvider, useScrollScene } from '../../hooks/useScrollScenes'
-import { Experience } from '../canvas/Experience'
 import { HeroBackdrop, HeroContent } from './Hero'
 import { HeavyLiftingBackdrop, HeavyLiftingContent } from './HeavyLifting'
 import { CardioBackdrop, CardioContent } from './Cardio'
@@ -40,14 +39,12 @@ function ProgressRail() {
 }
 
 function StageContent() {
-  const { progress } = useScrollScene()
   return (
     <div className="sticky top-0 z-0 h-screen w-full overflow-hidden bg-obsidian">
       <HeroBackdrop />
       <HeavyLiftingBackdrop />
       <CardioBackdrop />
       <FuelRecoveryBackdrop />
-      <Experience progress={progress} />
       <HeroContent />
       <HeavyLiftingContent />
       <CardioContent />

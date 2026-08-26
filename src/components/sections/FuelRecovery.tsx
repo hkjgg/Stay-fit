@@ -6,6 +6,7 @@ import { sceneRange } from '../../lib/constants'
 
 const RANGE = sceneRange('fuel')
 const RIM_CYAN = '#00f3ff'
+const LIME = '#39ff14'
 
 const PRODUCTS = [
   { name: 'PR Lifestyle Micro Creatine', blurb: 'Pure micronized strength & power' },
@@ -13,6 +14,73 @@ const PRODUCTS = [
   { name: 'Pre-Workout Energy', blurb: 'Clean caffeine + pump complex' },
   { name: 'Custom Cold Shakes', blurb: 'Built to order at the bar' },
 ]
+
+/**
+ * Flat glass "packshot" plate standing in for a photographic product asset —
+ * procedural, not a literal reproduction of any brand's real packaging or
+ * label art (no texture/decal pipeline in this project). Floats on its own
+ * loop via Framer Motion and sits on the counter with a cyan/lime rim glow.
+ */
+function ProductPlate({
+  name,
+  spec,
+  accent,
+  height,
+  delay,
+}: {
+  name: string
+  spec: string
+  accent: string
+  height: string
+  delay: number
+}) {
+  return (
+    <motion.div
+      animate={{ y: [0, -12, 0] }}
+      transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay }}
+      className="flex w-28 flex-col items-center"
+    >
+      <div
+        className="relative w-full overflow-hidden rounded-2xl border backdrop-blur-md"
+        style={{ height, borderColor: `${accent}66`, boxShadow: `0 0 28px ${accent}40` }}
+      >
+        <div className="absolute inset-x-0 top-0 h-3" style={{ background: accent, boxShadow: `0 0 12px ${accent}` }} />
+        <div
+          className="absolute inset-x-2 bottom-2 top-6 rounded-xl"
+          style={{ background: `linear-gradient(180deg, ${accent}26, rgba(255,255,255,0.02))` }}
+        />
+      </div>
+      <p className="mt-3 text-center text-[11px] font-semibold uppercase leading-tight tracking-wide text-bone/80">
+        {name}
+      </p>
+      <p className="text-[10px] text-bone/40">{spec}</p>
+    </motion.div>
+  )
+}
+
+/** Dark glass counter strip the product plates rest on, edged with a cyan rim-light. */
+function Counter() {
+  return (
+    <div className="relative mt-4 h-2 w-72 rounded-full bg-white/[0.03]">
+      <div
+        className="absolute inset-x-6 top-0 h-px rounded-full"
+        style={{ background: RIM_CYAN, boxShadow: `0 0 14px 2px ${RIM_CYAN}` }}
+      />
+    </div>
+  )
+}
+
+function ProductShowcase() {
+  return (
+    <div className="hidden flex-col items-center md:flex">
+      <div className="flex items-end gap-8">
+        <ProductPlate name="PR Lifestyle Micro Creatine" spec="Pure micronized" accent={RIM_CYAN} height="7rem" delay={0} />
+        <ProductPlate name="BPI Sports Vegan Protein" spec="27g plant protein" accent={LIME} height="9.5rem" delay={0.7} />
+      </div>
+      <Counter />
+    </div>
+  )
+}
 
 export function FuelRecoveryBackdrop() {
   const opacity = useSceneOpacity(...RANGE, 0.16)
@@ -42,11 +110,9 @@ export function FuelRecoveryContent() {
   return (
     <motion.div
       style={{ opacity }}
-      className="absolute inset-0 flex h-full w-full flex-col justify-center px-6 py-24 md:px-14 md:py-28"
+      className="absolute inset-0 flex h-full w-full items-center justify-between gap-10 px-6 py-24 md:px-14 md:py-28"
     >
-      {/* Left column: heading + glassmorphic spec cards. Right side is left clear
-          for the 3D counter + product models rendered behind this content. */}
-      <div className="flex w-full max-w-xl flex-col items-start text-left">
+      <div className="flex w-full max-w-xl shrink-0 flex-col items-start text-left">
         <motion.div style={{ x: titleX }}>
           <span
             className="mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] backdrop-blur-md"
@@ -54,7 +120,10 @@ export function FuelRecoveryContent() {
           >
             Fuel &amp; Recovery Hub
           </span>
-          <h2 className="font-display text-[11vw] leading-[0.9] text-bone sm:text-[6vw] md:text-[3.6vw]">
+          <h2
+            className="font-display text-[11vw] leading-[0.9] text-bone sm:text-[6vw] md:text-[3.6vw]"
+            style={{ textShadow: `0 0 40px ${RIM_CYAN}25` }}
+          >
             RECOVERY
             <br />
             &amp; FUEL
@@ -94,6 +163,8 @@ export function FuelRecoveryContent() {
           </motion.a>
         </motion.div>
       </div>
+
+      <ProductShowcase />
     </motion.div>
   )
 }
