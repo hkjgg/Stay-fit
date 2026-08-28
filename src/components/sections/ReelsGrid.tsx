@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { REELS } from '../../data/reels'
 import { ReelModal } from '../ui/ReelModal'
 import { DynamicVideo } from '../canvas/DynamicVideo'
+import { POSTERS } from '../../lib/videoPoster'
 
 const CYAN = '#00f3ff'
 const LIME = '#39ff14'
@@ -54,7 +55,7 @@ export function ReelsGrid() {
             Padded on all sides because overflow-x-auto clips vertically too, and the
             cards' neon bloom extends well past their bounds. */}
         <div
-          className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-2 py-6"
+          className="flex snap-x snap-mandatory gap-3 overflow-x-auto py-6 pl-2 pr-8 sm:pr-2"
           onMouseLeave={() => setHovered(null)}
         >
           {REELS.map((reel, i) => {
@@ -92,6 +93,7 @@ export function ReelsGrid() {
                   videoSrc={reel.video}
                   frameOffset={reel.frameOffset}
                   filterClassName={FILTER_PRESETS[i % FILTER_PRESETS.length]}
+                  poster={i % 2 === 0 ? POSTERS.hero : POSTERS.iron}
                 />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(11,11,14,0.9)_100%)]" />
 

@@ -5,6 +5,7 @@ import { SceneBackdrop } from '../canvas/SceneBackdrop'
 import { HeroDust } from '../canvas/HeroDust'
 import { rangeProgress, smoothstep, lerp } from '../../lib/scroll3d'
 import { sceneRange } from '../../lib/constants'
+import { POSTERS } from '../../lib/videoPoster'
 
 const RANGE = sceneRange('hero')
 const CYAN = '#00f3ff'
@@ -62,6 +63,7 @@ export function HeroBackdrop() {
         scale={scale}
         videoSrc="/videos/VID_1.mp4"
         gradient="bg-[radial-gradient(ellipse_at_50%_30%,#1a1a20_0%,#0b0b0e_65%)]"
+        poster={POSTERS.hero}
         clear
       />
       <HeroDust local={local} />

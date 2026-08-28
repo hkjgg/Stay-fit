@@ -6,6 +6,7 @@ import { DynamicVideo } from '../canvas/DynamicVideo'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { rangeProgress, smoothstep, lerp, edgeGlow } from '../../lib/scroll3d'
 import { sceneRange } from '../../lib/constants'
+import { POSTERS } from '../../lib/videoPoster'
 
 const RANGE = sceneRange('cardio')
 const STATS = [
@@ -30,6 +31,7 @@ export function CardioBackdrop() {
       glow={glow}
       videoSrc="/videos/VID_1.mp4"
       gradient="bg-[radial-gradient(ellipse_at_80%_50%,#331a0d_0%,#0b0b0e_70%)]"
+      poster={POSTERS.pulse}
       frameOffset={4}
     />
   )
@@ -60,6 +62,7 @@ function GalleryTile({ local, objectPosition, delay, glowColor, frameOffset, cla
         videoSrc="/videos/VID_1.mp4"
         frameOffset={frameOffset}
         filterClassName={KINETIC_FILTER}
+        poster={POSTERS.pulse}
         objectPosition={objectPosition}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 via-transparent to-obsidian/10" />

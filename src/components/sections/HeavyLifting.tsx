@@ -5,6 +5,7 @@ import { DynamicVideo } from '../canvas/DynamicVideo'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { rangeProgress, smoothstep, lerp, edgeGlow } from '../../lib/scroll3d'
 import { sceneRange } from '../../lib/constants'
+import { POSTERS } from '../../lib/videoPoster'
 
 const RANGE = sceneRange('heavy')
 const FEATURES = ['Olympic Platforms', 'Free Weights to 50kg', 'Power Racks & Chains', 'Bodycore Coaching']
@@ -25,6 +26,7 @@ export function HeavyLiftingBackdrop() {
       glow={glow}
       videoSrc="/videos/VID_2.mp4"
       gradient="bg-[radial-gradient(ellipse_at_20%_50%,#0d1a33_0%,#0b0b0e_70%)]"
+      poster={POSTERS.iron}
       frameOffset={2}
     />
   )
@@ -65,6 +67,7 @@ function ShowcasePanel({
         videoSrc={videoSrc}
         frameOffset={frameOffset}
         filterClassName={STEEL_FILTER}
+        poster={POSTERS.iron}
         objectPosition={objectPosition}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-obsidian/85 via-transparent to-obsidian/20" />

@@ -23,6 +23,10 @@ interface SceneBackdropProps {
   /** Seconds to seek into the clip on load, so different sections open on a different
    *  frame of the same source video instead of all starting in lockstep. */
   frameOffset?: number
+  /** Gradient data-URI used as the video's poster. Shown until the first frame
+   *  decodes, and left up permanently on devices that refuse to autoplay (iOS
+   *  Low Power Mode), so the scene never falls back to black. */
+  poster?: string
 }
 
 /**
@@ -51,6 +55,7 @@ export function SceneBackdrop({
   clear = false,
   playbackRate = 0.75,
   frameOffset = 0,
+  poster,
 }: SceneBackdropProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const playing = useRef(false)
@@ -91,6 +96,11 @@ export function SceneBackdrop({
         }}
         className={`absolute inset-0 h-full w-full object-cover ${clear ? 'opacity-100' : 'opacity-60 mix-blend-luminosity'}`}
         src={videoSrc}
+        poster={poster}
+        // `autoPlay muted playsInline loop` all have to be present for mobile
+        // browsers to permit unattended background playback; the opacity-gated
+        // play/pause above then keeps only the visible scene decoding.
+        autoPlay
         loop
         muted
         playsInline

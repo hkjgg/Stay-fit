@@ -13,6 +13,10 @@ interface DynamicVideoProps {
   filterClassName?: string
   objectPosition?: string
   className?: string
+  /** Gradient shown behind (and as the poster for) the video, so a device that
+   *  refuses to autoplay — iOS Low Power Mode most notably — shows a styled
+   *  backdrop instead of a black rectangle. */
+  poster?: string
 }
 
 /**
@@ -22,10 +26,12 @@ interface DynamicVideoProps {
  * clips still read as visually distinct footage. Always carries the shared
  * watermark mask so no video in the app renders without it.
  *
- * Playback is gated on intersection rather than left on `autoPlay`: the reels
- * carousel alone mounts six of these, and decoding all of them at once (most
- * scrolled out of view) is the main source of stutter on phones. Each clip
- * plays only while it's actually on screen.
+ * Carries `autoPlay muted playsInline loop` explicitly — mobile browsers only
+ * permit unattended background playback when all of them are present — while
+ * an IntersectionObserver additionally pauses clips that scroll out of view.
+ * The reels carousel alone mounts six of these, and decoding all of them at
+ * once is the main source of stutter on phones; the two mechanisms are
+ * complementary rather than redundant.
  */
 export function DynamicVideo({
   videoSrc,
@@ -34,6 +40,7 @@ export function DynamicVideo({
   filterClassName = '',
   objectPosition,
   className = '',
+  poster,
 }: DynamicVideoProps) {
   const ref = useRef<HTMLVideoElement>(null)
 
@@ -63,11 +70,23 @@ export function DynamicVideo({
 
   return (
     <>
+      {/* Painted underneath the video, so a frame that never decodes (Low Power
+          Mode, a codec the device won't take) reveals the gradient rather than
+          a black hole. */}
+      {poster && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url("${poster}")` }}
+        />
+      )}
       <video
         ref={ref}
         className={`absolute inset-0 h-full w-full object-cover ${filterClassName} ${className}`}
         style={objectPosition ? { objectPosition } : undefined}
         src={videoSrc}
+        poster={poster}
+        autoPlay
         loop
         muted
         playsInline

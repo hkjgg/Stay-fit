@@ -4,6 +4,7 @@ import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRang
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
 import { rangeProgress, smoothstep, lerp, edgeGlow } from '../../lib/scroll3d'
 import { sceneRange } from '../../lib/constants'
+import { POSTERS } from '../../lib/videoPoster'
 
 const RANGE = sceneRange('fuel')
 const RIM_CYAN = '#00f3ff'
@@ -255,8 +256,23 @@ function ProductCard({ product, accent, delay }: { product: ProductCardData; acc
       className="relative shrink-0 snap-start pt-6"
       style={{ perspective: 800 }}
     >
-      <SpecBadge text={product.badges[0]} accent={accent} corner="-top-1 -right-3" delay={delay * 0.3} />
-      <SpecBadge text={product.badges[1]} accent={accent} corner="-bottom-2 -left-3" delay={delay * 0.3 + 1.2} />
+      {/* On phones the badges tuck inside the card's own bounds (top-1/bottom-1,
+          within its px-4 py-6 padding) instead of hanging off the corners. The
+          carousel is overflow-x-auto, which clips vertically as well, so an
+          outside-hung badge got its bottom edge cut off on small screens.
+          From sm: up they float outside again for the intended look. */}
+      <SpecBadge
+        text={product.badges[0]}
+        accent={accent}
+        corner="top-8 right-2 sm:-top-1 sm:-right-3"
+        delay={delay * 0.3}
+      />
+      <SpecBadge
+        text={product.badges[1]}
+        accent={accent}
+        corner="bottom-2 left-2 sm:-bottom-2 sm:-left-3"
+        delay={delay * 0.3 + 1.2}
+      />
 
       <motion.div
         ref={ref}
@@ -308,7 +324,7 @@ function ProductCard({ product, accent, delay }: { product: ProductCardData; acc
  *  they get cut off at the top and bottom of the scroller. */
 function ProductCarousel() {
   return (
-    <div className="flex gap-6 overflow-x-auto px-2 py-8 [scrollbar-width:thin] snap-x snap-mandatory">
+    <div className="flex gap-6 overflow-x-auto py-8 pl-2 pr-8 [scrollbar-width:thin] snap-x snap-mandatory sm:pr-2">
       {INVENTORY.map((product, i) => (
         <ProductCard key={product.name} product={product} accent={i % 2 === 0 ? LIME : RIM_CYAN} delay={i} />
       ))}
@@ -329,6 +345,7 @@ export function FuelRecoveryBackdrop() {
       glow={glow}
       videoSrc="/videos/VID_2.mp4"
       gradient="bg-[radial-gradient(ellipse_at_50%_45%,#062026_0%,#0b0b0e_70%)]"
+      poster={POSTERS.fuel}
       glass
     />
   )
