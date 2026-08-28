@@ -109,7 +109,7 @@ export function SceneBackdrop({
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_38%,rgba(11,11,14,0.95)_100%)] mix-blend-multiply" />
           <div className="absolute inset-0 bg-gradient-to-br from-obsidian/50 via-transparent to-obsidian/60 mix-blend-soft-light" />
 
-          {glass && <div className="absolute inset-0 bg-obsidian/20 backdrop-blur-2xl" />}
+          {glass && <div className="absolute inset-0 bg-obsidian/20 backdrop-blur-sm md:backdrop-blur-2xl" />}
           <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/40 to-obsidian/70" />
           <div className="absolute inset-0 bg-obsidian/25" />
         </>

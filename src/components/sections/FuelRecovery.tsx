@@ -215,7 +215,7 @@ function SpecBadge({ text, accent, corner, delay }: { text: string; accent: stri
     <motion.div
       animate={{ y: [0, -5, 0] }}
       transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut', delay }}
-      className={`absolute z-10 rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wide whitespace-nowrap backdrop-blur-lg ${corner}`}
+      className={`absolute z-10 rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wide whitespace-nowrap backdrop-blur-sm md:backdrop-blur-lg ${corner}`}
       style={{ borderColor: `${accent}70`, color: accent, background: 'rgba(11,11,14,0.5)', boxShadow: `0 0 14px ${accent}40` }}
     >
       {text}
@@ -224,7 +224,7 @@ function SpecBadge({ text, accent, corner, delay }: { text: string; accent: stri
 }
 
 /** Product card with mouse-driven 3D parallax tilt, a dark glassmorphic body
- *  (backdrop-blur-lg), and neon cyan/lime rim glow matched to the product. */
+ *  (blurred glass body), and neon cyan/lime rim glow matched to the product. */
 function ProductCard({ product, accent, delay }: { product: ProductCardData; accent: string; delay: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const rawRotateX = useMotionValue(0)
@@ -344,17 +344,17 @@ export function FuelRecoveryContent() {
   return (
     <motion.div
       style={{ opacity }}
-      className="absolute inset-0 flex h-full w-full flex-col justify-center gap-8 px-6 py-20 md:px-14"
+      className="absolute inset-0 flex h-full w-full flex-col justify-center gap-6 px-4 py-16 md:gap-8 md:px-14 md:py-20"
     >
       <motion.div style={{ x: titleX }} className="shrink-0">
         <span
-          className="mb-3 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] backdrop-blur-md"
+          className="mb-3 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] backdrop-blur-sm md:backdrop-blur-md"
           style={{ borderColor: `${RIM_CYAN}66`, color: RIM_CYAN, background: 'rgba(255,255,255,0.03)' }}
         >
           Fuel &amp; Recovery Hub
         </span>
         <h2
-          className="font-display text-[11vw] leading-[0.9] text-bone sm:text-[6vw] md:text-[3.4vw]"
+          className="font-display text-[clamp(1.9rem,7vw,3.2rem)] leading-[0.9] text-bone"
           style={{ textShadow: `0 0 40px ${RIM_CYAN}25` }}
         >
           RECOVERY &amp; FUEL{' '}

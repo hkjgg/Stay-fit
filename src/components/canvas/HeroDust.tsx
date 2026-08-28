@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useIsMobile } from '../../hooks/useIsMobile'
 import type { MotionValue } from 'framer-motion'
 
 interface DustParticle {
@@ -12,7 +13,12 @@ interface DustParticle {
   driftSpeed: number
 }
 
-const COUNT = 46
+const COUNT_DESKTOP = 46
+/** Phones get roughly a third of the particles and a capped pixel ratio — the
+ *  field is decorative, and a full-DPR canvas repainting every frame behind a
+ *  playing video is a real source of stutter on mid-range devices. */
+const COUNT_MOBILE = 16
+const MAX_DPR_MOBILE = 1.5
 /** Local scene progress past which the field is fully scattered/invisible —
  *  matches the hero's dock completion so dust clears right as the title docks. */
 const SCATTER_END = 0.4
@@ -25,6 +31,7 @@ const SCATTER_END = 0.4
  */
 export function HeroDust({ local }: { local: MotionValue<number> }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -36,16 +43,18 @@ export function HeroDust({ local }: { local: MotionValue<number> }) {
     let height = 0
     const resize = () => {
       const rect = canvas.getBoundingClientRect()
+      const dpr = isMobile ? Math.min(devicePixelRatio, MAX_DPR_MOBILE) : devicePixelRatio
       width = rect.width
       height = rect.height
-      canvas.width = width * devicePixelRatio
-      canvas.height = height * devicePixelRatio
-      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0)
+      canvas.width = width * dpr
+      canvas.height = height * dpr
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
     resize()
     window.addEventListener('resize', resize)
 
-    const particles: DustParticle[] = Array.from({ length: COUNT }, () => ({
+    const count = isMobile ? COUNT_MOBILE : COUNT_DESKTOP
+    const particles: DustParticle[] = Array.from({ length: count }, () => ({
       baseX: Math.random(),
       baseY: Math.random(),
       z: 0.3 + Math.random() * 0.7,
@@ -88,7 +97,7 @@ export function HeroDust({ local }: { local: MotionValue<number> }) {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
     }
-  }, [local])
+  }, [local, isMobile])
 
   return <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" />
 }

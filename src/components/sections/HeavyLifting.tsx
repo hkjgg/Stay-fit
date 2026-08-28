@@ -2,6 +2,7 @@ import { motion, useTransform, type MotionValue } from 'framer-motion'
 import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRange'
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
 import { DynamicVideo } from '../canvas/DynamicVideo'
+import { useIsMobile } from '../../hooks/useIsMobile'
 import { rangeProgress, smoothstep, lerp, edgeGlow } from '../../lib/scroll3d'
 import { sceneRange } from '../../lib/constants'
 
@@ -79,7 +80,14 @@ function ShowcasePanel({
  *  the old power-rack/barbell mesh, each with its own parallax drift and frame
  *  offset so the shared source clip reads differently in each. */
 function ShowcaseGrid({ local }: { local: MotionValue<number> }) {
+  const isMobile = useIsMobile()
   const videoSrc = '/videos/VID_2.mp4'
+
+  // Skipped entirely on phones rather than hidden with `display:none` — a
+  // mounted <video> still fetches and decodes, so hiding it would keep paying
+  // for three clips nobody can see.
+  if (isMobile) return null
+
   return (
     <div className="hidden w-full max-w-md grid-cols-2 gap-4 md:grid">
       <div className="col-span-1 grid gap-4">
@@ -125,9 +133,9 @@ export function HeavyLiftingContent() {
   return (
     <motion.div
       style={{ opacity }}
-      className="absolute inset-0 flex h-full w-full items-center justify-between gap-10 px-8 md:px-20"
+      className="absolute inset-0 flex h-full w-full items-center justify-between gap-10 px-4 md:px-20"
     >
-      <motion.div style={{ x }} className="max-w-xl shrink-0">
+      <motion.div style={{ x }} className="w-full max-w-xl md:shrink-0">
         <span
           className="glass mb-4 inline-flex items-center gap-2 rounded-full border border-blue/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-blue-soft"
           style={{ boxShadow: `0 0 18px ${CYAN}33` }}
@@ -135,7 +143,7 @@ export function HeavyLiftingContent() {
           Heavy Lifting Zone
         </span>
         <h2
-          className="font-display text-[11vw] leading-[0.88] text-bone sm:text-[6vw] md:text-[5vw]"
+          className="font-display text-[clamp(2rem,8vw,4.5rem)] leading-[0.88] text-bone"
           style={{ textShadow: `0 0 40px ${CYAN}25` }}
         >
           BUILT ON
@@ -146,7 +154,7 @@ export function HeavyLiftingContent() {
           Bodycore strength training on Olympic platforms with power racks, chain-loaded
           presses, and heavy-duty plates built for real progressive overload.
         </p>
-        <ul className="mt-8 grid grid-cols-2 gap-3">
+        <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {FEATURES.map((f) => (
             <li
               key={f}

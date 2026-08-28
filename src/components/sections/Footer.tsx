@@ -2,7 +2,7 @@ import { WHATSAPP_LOCATION, WHATSAPP_NUMBER } from '../../lib/constants'
 
 export function Footer() {
   return (
-    <footer id="contact" className="relative border-t border-bone/10 bg-obsidian px-6 py-16 md:px-12">
+    <footer id="contact" className="relative border-t border-bone/10 bg-obsidian px-4 py-14 md:px-12 md:py-16">
       <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:justify-between">
         <div>
           <p className="font-display text-2xl text-bone">

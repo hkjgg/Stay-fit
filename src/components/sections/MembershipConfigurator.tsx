@@ -30,13 +30,13 @@ export function MembershipConfigurator() {
   )
 
   return (
-    <section id="membership" className="relative bg-obsidian-soft px-6 py-24 md:px-12 lg:py-32">
+    <section id="membership" className="relative bg-obsidian-soft px-4 py-20 md:px-12 md:py-24 lg:py-32">
       <div className="mx-auto max-w-5xl">
         <div className="mb-12 text-center">
           <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.3em] text-blue-soft">
             Membership
           </span>
-          <h2 className="font-display text-5xl text-bone md:text-6xl">BUILD YOUR PLAN</h2>
+          <h2 className="font-display text-4xl text-bone sm:text-5xl md:text-6xl">BUILD YOUR PLAN</h2>
           <p className="mx-auto mt-4 max-w-md text-bone/50">
             Pick a base plan, toggle the extras you actually want, and see your monthly
             price update live.

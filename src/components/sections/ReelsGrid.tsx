@@ -22,12 +22,12 @@ export function ReelsGrid() {
   }
 
   return (
-    <section id="reels" className="relative bg-obsidian px-6 py-24 md:px-12 lg:py-32">
+    <section id="reels" className="relative bg-obsidian px-4 py-20 md:px-12 md:py-24 lg:py-32">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
           <div>
             <span
-              className="mb-3 inline-flex items-center rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] backdrop-blur-md"
+              className="mb-3 inline-flex items-center rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] backdrop-blur-sm md:backdrop-blur-md"
               style={{
                 borderColor: `${CYAN}66`,
                 color: CYAN,
@@ -38,7 +38,7 @@ export function ReelsGrid() {
               Inside Stay Fit
             </span>
             <h2
-              className="font-display text-5xl text-bone md:text-6xl"
+              className="font-display text-4xl text-bone sm:text-5xl md:text-6xl"
               style={{ textShadow: `0 0 40px ${CYAN}25` }}
             >
               THE REELS
@@ -100,7 +100,7 @@ export function ReelsGrid() {
                     overflow-x-auto, which clips vertically too, so a badge hung
                     outside the card would be cut off. */}
                 <span
-                  className="absolute left-2 top-2 rounded-full border px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide backdrop-blur-lg"
+                  className="absolute left-2 top-2 rounded-full border px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide backdrop-blur-sm md:backdrop-blur-lg"
                   style={{
                     borderColor: `${accent}70`,
                     color: accent,

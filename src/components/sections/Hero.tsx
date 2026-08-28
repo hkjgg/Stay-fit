@@ -105,7 +105,7 @@ export function HeroContent() {
           ],
         }}
         transition={{ textShadow: { duration: 2.6, repeat: Infinity, ease: 'easeInOut' } }}
-        className="absolute whitespace-nowrap rounded-3xl border border-bone/10 bg-white/[0.04] px-6 py-2 font-display text-[18vw] leading-[0.85] text-transparent shadow-[0_0_24px_rgba(0,243,255,0.15)] backdrop-blur-[4px] [-webkit-text-stroke:1.5px_rgba(245,243,238,0.92)] sm:text-[13vw] md:text-[10vw]"
+        className="absolute whitespace-nowrap rounded-3xl border border-bone/10 bg-white/[0.04] px-6 py-2 font-display text-[clamp(2.5rem,15vw,9rem)] leading-[0.85] text-transparent shadow-[0_0_24px_rgba(0,243,255,0.15)] backdrop-blur-[4px] [-webkit-text-stroke:1.5px_rgba(245,243,238,0.92)]"
       >
         STAY FIT
       </motion.h1>
@@ -122,7 +122,11 @@ export function HeroContent() {
       {/* Bottom: generously spaced below the sub-text row, and the only other
           element left in the hero besides the wordmark and its cycler — no
           secondary floating text tags (the old "Open Now" line) cluttering
-          the frame. */}
+          the frame.
+
+          `whitespace-nowrap` matters here: the pill is absolutely positioned at
+          left:50%, so its shrink-to-fit width is capped at half the container —
+          on a phone that wrapped the label onto three lines. */}
       <motion.div
         style={{
           opacity: indicatorOpacity,
@@ -131,9 +135,9 @@ export function HeroContent() {
           x: '-50%',
           boxShadow: `0 0 26px ${CYAN}40`,
         }}
-        className="absolute flex items-center gap-2 rounded-full border border-cyan/40 bg-white/[0.06] px-4 py-2 backdrop-blur-md"
+        className="absolute flex items-center gap-2 whitespace-nowrap rounded-full border border-cyan/40 bg-white/[0.06] px-3 py-2 backdrop-blur-sm sm:px-4 md:backdrop-blur-md"
       >
-        <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-bone">
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-bone sm:text-[11px] sm:tracking-[0.3em]">
           Scroll to Explore Zones
         </span>
         <motion.span

@@ -3,6 +3,7 @@ import { motion, useTransform, type MotionValue } from 'framer-motion'
 import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRange'
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
 import { DynamicVideo } from '../canvas/DynamicVideo'
+import { useIsMobile } from '../../hooks/useIsMobile'
 import { rangeProgress, smoothstep, lerp, edgeGlow } from '../../lib/scroll3d'
 import { sceneRange } from '../../lib/constants'
 
@@ -69,6 +70,12 @@ function GalleryTile({ local, objectPosition, delay, glowColor, frameOffset, cla
 /** Kinetic gallery: three real-footage tiles, each with its own frame offset
  *  so the one shared source clip reads as different footage. */
 function KineticGallery({ local }: { local: MotionValue<number> }) {
+  const isMobile = useIsMobile()
+
+  // Skipped entirely on phones rather than hidden with `display:none` — see
+  // the matching note in HeavyLifting's ShowcaseGrid.
+  if (isMobile) return null
+
   return (
     <div className="hidden w-full max-w-md grid-cols-2 gap-4 md:grid">
       <GalleryTile
@@ -140,11 +147,11 @@ export function CardioContent() {
   return (
     <motion.div
       style={{ opacity }}
-      className="absolute inset-0 flex h-full w-full items-center justify-between gap-10 px-8 md:px-20"
+      className="absolute inset-0 flex h-full w-full items-center justify-between gap-10 px-4 md:px-20"
     >
       <KineticGallery local={local} />
 
-      <motion.div style={{ x }} className="ml-auto max-w-xl shrink-0 text-right">
+      <motion.div style={{ x }} className="ml-auto w-full max-w-xl text-right md:shrink-0">
         <span
           className="glass mb-4 inline-flex items-center gap-2 rounded-full border border-orange/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-orange-soft"
           style={{ boxShadow: `0 0 18px ${CYAN}33` }}
@@ -152,7 +159,7 @@ export function CardioContent() {
           Cardio &amp; Kinetic Zone
         </span>
         <h2
-          className="font-display text-[11vw] leading-[0.88] text-bone sm:text-[6vw] md:text-[5vw]"
+          className="font-display text-[clamp(2rem,8vw,4.5rem)] leading-[0.88] text-bone"
           style={{ textShadow: `0 0 40px ${LIME}25` }}
         >
           CHASE THE
@@ -168,7 +175,7 @@ export function CardioContent() {
 
         <div className="mt-8 flex flex-col items-end gap-3">
           <BpmCard />
-          <div className="flex gap-3">
+          <div className="flex flex-wrap justify-end gap-3">
             {STATS.map((s) => (
               <div
                 key={s.label}

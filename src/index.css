@@ -111,6 +111,24 @@ body {
   border: 1px solid rgba(245, 243, 238, 0.1);
 }
 
+/* Phones: heavy backdrop blur is the single most expensive effect here, and
+   these two classes are used on dozens of elements at once. Keep the frosted
+   look at a fraction of the GPU cost. The Tailwind `backdrop-blur-*` utilities
+   used inline are toned down separately via `md:` variants. */
+@media (max-width: 767px) {
+  .glass {
+    backdrop-filter: blur(8px) saturate(130%);
+    -webkit-backdrop-filter: blur(8px) saturate(130%);
+    background: rgba(11, 11, 14, 0.55);
+  }
+
+  .glass-card {
+    backdrop-filter: blur(8px) saturate(120%);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+    background: rgba(11, 11, 14, 0.82);
+  }
+}
+
 .noise-overlay {
   pointer-events: none;
   position: fixed;

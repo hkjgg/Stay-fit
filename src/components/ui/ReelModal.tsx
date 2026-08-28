@@ -31,7 +31,7 @@ export function ReelModal({ reel, onClose, onNavigate }: ReelModalProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[70] flex items-center justify-center bg-obsidian/80 backdrop-blur-xl px-4"
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-obsidian/80 backdrop-blur-sm md:backdrop-blur-xl px-4"
           onClick={onClose}
         >
           <button
