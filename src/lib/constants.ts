@@ -22,7 +22,12 @@ export function sceneRange(id: SceneId): [number, number] {
   return SCENES.find((s) => s.id === id)!.range
 }
 
-export const WHATSAPP_NUMBER = '9613043932'
+/**
+ * Full international WhatsApp number, digits only — wa.me takes no `+`,
+ * spaces or dashes. Confirmed by the owner as 961 + 03043932, keeping the
+ * leading 0 rather than stripping it as strict E.164 would.
+ */
+export const WHATSAPP_NUMBER = '96103043932'
 export const WHATSAPP_LOCATION = 'Borj El Barajneh, Beirut'
 
 /** Opening hours, shown in the hero, the footer, and the WhatsApp info card. */

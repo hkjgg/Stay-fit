@@ -36,7 +36,7 @@ export function Footer() {
             <a
               href={whatsappLink()}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="block text-sm text-bone/70 transition hover:text-orange-soft"
             >
               WhatsApp Us
@@ -74,7 +74,7 @@ export function Footer() {
           <a
             href={MAP_LINK_URL}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="inline-flex shrink-0 items-center gap-2 rounded-full border px-5 py-2.5 text-xs font-bold uppercase tracking-[0.2em] text-bone transition hover:scale-[1.03]"
             style={{
               borderColor: `${CYAN}70`,

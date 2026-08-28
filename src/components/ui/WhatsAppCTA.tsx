@@ -24,7 +24,7 @@ export function WhatsAppCTA() {
             <a
               href={whatsappLink()}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="mt-4 flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-obsidian transition hover:scale-[1.02]"
             >
               <WhatsAppIcon className="h-4 w-4" />

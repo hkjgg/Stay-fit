@@ -150,7 +150,7 @@ export function MembershipConfigurator() {
             <a
               href={whatsappLink(waMessage)}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className={`mt-6 w-full rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-wide transition hover:scale-[1.03] ${
                 isQuoted
                   ? 'bg-[#25D366] text-obsidian'
