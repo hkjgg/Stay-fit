@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRange'
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
@@ -15,21 +15,24 @@ interface ProductCardData {
   shape: 'tub' | 'bottle'
   fill: string
   badges: string[]
-  /** Path to a real product cutout (transparent PNG) once one exists — falls
-   *  back to the procedural packshot silhouette below when omitted. */
-  imageSrc?: string
+  /** Real product photo under /public/images/supplements/. Each card renders
+   *  this centered with object-contain; if the file isn't present the card
+   *  degrades to the procedural silhouette below rather than showing a
+   *  broken image (see ProductPackshot). */
+  imageSrc: string
 }
 
-// Real current inventory (no photographic assets available in this project —
-// see note below — so each product is a procedural packshot carrying its
-// actual name, brand line, and label specs rather than a placeholder).
+const IMG = '/images/supplements'
+
+// Real current inventory, each bound to its own product photo.
 const INVENTORY: ProductCardData[] = [
   {
     name: 'Micro Creatine',
-    brand: 'PR Lifestyle × Larry Wheels',
+    brand: 'PR Sciences × Larry Wheels',
     shape: 'tub',
     fill: '#15161a',
     badges: ['120 Servings', '732g', 'Unflavored'],
+    imageSrc: `${IMG}/pr-micro-creatine.png`,
   },
   {
     name: 'Essentials EAAs',
@@ -37,6 +40,7 @@ const INVENTORY: ProductCardData[] = [
     shape: 'tub',
     fill: '#15161a',
     badges: ['25 Servings', 'EAAs + Hydration', '345g'],
+    imageSrc: `${IMG}/pr-essentials-eaas.png`,
   },
   {
     name: 'Vegan Protein',
@@ -44,6 +48,7 @@ const INVENTORY: ProductCardData[] = [
     shape: 'tub',
     fill: '#161514',
     badges: ['20g Protein', '0g Sugar', 'Non-Dairy'],
+    imageSrc: `${IMG}/bpi-vegan-protein.png`,
   },
   {
     name: 'Mint Lemonade',
@@ -51,6 +56,7 @@ const INVENTORY: ProductCardData[] = [
     shape: 'bottle',
     fill: '#3ddc45',
     badges: ['25X Electrolytes', '500ML', 'Vitamins B1·B3·B6'],
+    imageSrc: `${IMG}/tiptop-mint-lemonade.png`,
   },
   {
     name: 'Fruits Punch',
@@ -58,6 +64,7 @@ const INVENTORY: ProductCardData[] = [
     shape: 'bottle',
     fill: '#e8362f',
     badges: ['25X Electrolytes', '500ML', 'No Artificial Flavors'],
+    imageSrc: `${IMG}/tiptop-fruits-punch.png`,
   },
   {
     name: 'Glowberry',
@@ -65,17 +72,18 @@ const INVENTORY: ProductCardData[] = [
     shape: 'bottle',
     fill: '#2fa7e6',
     badges: ['25X Electrolytes', '500ML', 'Vitamins B1·B3·B6'],
+    imageSrc: `${IMG}/tiptop-glowberry.png`,
   },
 ]
 
 /**
- * Product visual: a solid, non-transparent dark panel (deliberately opaque
- * so it never lets background video motion bleed through and wash out
- * whatever sits on it) hosting either a real product cutout — a
- * high-contrast transparent PNG, once one exists — or, absent that, a
- * procedural packshot silhouette carrying the product's shape/color
- * identity. This project has no texture/decal pipeline to reproduce real
- * packaging or label art, so the silhouette is a stand-in, not a photo.
+ * Product visual: the real product photo, centered and object-contain so it
+ * never distorts, on a solid dark panel (deliberately opaque so background
+ * video motion can't bleed through and wash it out).
+ *
+ * If the image file is missing the card falls back to a procedural
+ * silhouette carrying the product's shape/color identity, so a not-yet-added
+ * asset degrades gracefully instead of rendering a broken-image icon.
  */
 function ProductPackshot({
   shape,
@@ -90,10 +98,18 @@ function ProductPackshot({
   imageSrc?: string
   name: string
 }) {
-  if (imageSrc) {
+  const [imageFailed, setImageFailed] = useState(false)
+
+  if (imageSrc && !imageFailed) {
     return (
       <div className="glass-card flex h-28 w-24 items-center justify-center rounded-xl p-2">
-        <img src={imageSrc} alt={name} className="h-full w-full object-contain drop-shadow-lg" />
+        <img
+          src={imageSrc}
+          alt={name}
+          loading="lazy"
+          onError={() => setImageFailed(true)}
+          className="h-full w-full object-contain drop-shadow-lg"
+        />
       </div>
     )
   }
