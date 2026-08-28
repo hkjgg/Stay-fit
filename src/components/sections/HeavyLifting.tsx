@@ -24,7 +24,6 @@ export function HeavyLiftingBackdrop() {
       glow={glow}
       videoSrc="/videos/VID_2.mp4"
       gradient="bg-[radial-gradient(ellipse_at_20%_50%,#0d1a33_0%,#0b0b0e_70%)]"
-      playbackRate={1.05}
       frameOffset={2}
     />
   )
@@ -37,7 +36,6 @@ interface ShowcasePanelProps {
   parallax: [number, number]
   glowColor: string
   delay: number
-  playbackRate: number
   frameOffset: number
 }
 
@@ -51,7 +49,6 @@ function ShowcasePanel({
   parallax,
   glowColor,
   delay,
-  playbackRate,
   frameOffset,
 }: ShowcasePanelProps) {
   const reveal = useTransform(local, (t) => smoothstep(rangeProgress(t, delay, delay + 0.35)))
@@ -65,7 +62,6 @@ function ShowcasePanel({
     >
       <DynamicVideo
         videoSrc={videoSrc}
-        playbackRate={playbackRate}
         frameOffset={frameOffset}
         filterClassName={STEEL_FILTER}
         objectPosition={objectPosition}
@@ -80,8 +76,8 @@ function ShowcasePanel({
 }
 
 /** Interactive split-screen showcase: three real-footage tiles standing in for
- *  the old power-rack/barbell mesh, each with its own parallax drift, playback
- *  speed, and frame offset so the shared source clip reads differently in each. */
+ *  the old power-rack/barbell mesh, each with its own parallax drift and frame
+ *  offset so the shared source clip reads differently in each. */
 function ShowcaseGrid({ local }: { local: MotionValue<number> }) {
   const videoSrc = '/videos/VID_2.mp4'
   return (
@@ -94,7 +90,6 @@ function ShowcaseGrid({ local }: { local: MotionValue<number> }) {
           parallax={[6, -6]}
           glowColor={CYAN}
           delay={0}
-          playbackRate={1}
           frameOffset={0}
         />
         <ShowcasePanel
@@ -104,7 +99,6 @@ function ShowcaseGrid({ local }: { local: MotionValue<number> }) {
           parallax={[-4, 8]}
           glowColor={LIME}
           delay={0.12}
-          playbackRate={1.15}
           frameOffset={1.5}
         />
       </div>
@@ -116,7 +110,6 @@ function ShowcaseGrid({ local }: { local: MotionValue<number> }) {
           parallax={[10, -10]}
           glowColor={CYAN}
           delay={0.22}
-          playbackRate={0.9}
           frameOffset={3}
         />
       </div>

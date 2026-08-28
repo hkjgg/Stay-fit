@@ -29,7 +29,6 @@ export function CardioBackdrop() {
       glow={glow}
       videoSrc="/videos/VID_1.mp4"
       gradient="bg-[radial-gradient(ellipse_at_80%_50%,#331a0d_0%,#0b0b0e_70%)]"
-      playbackRate={1.2}
       frameOffset={4}
     />
   )
@@ -40,22 +39,13 @@ interface GalleryTileProps {
   objectPosition: string
   delay: number
   glowColor: string
-  playbackRate: number
   frameOffset: number
   className?: string
 }
 
 /** One tile in the kinetic gallery: a cropped, looping slice of real
  *  high-energy floor footage standing in for the old audio-waveform mesh. */
-function GalleryTile({
-  local,
-  objectPosition,
-  delay,
-  glowColor,
-  playbackRate,
-  frameOffset,
-  className = '',
-}: GalleryTileProps) {
+function GalleryTile({ local, objectPosition, delay, glowColor, frameOffset, className = '' }: GalleryTileProps) {
   const reveal = useTransform(local, (t) => smoothstep(rangeProgress(t, delay, delay + 0.35)))
   const scale = useTransform(reveal, (r) => lerp(0.9, 1, r))
   const y = useTransform(reveal, (r) => `${lerp(14, 0, r)}%`)
@@ -67,7 +57,6 @@ function GalleryTile({
     >
       <DynamicVideo
         videoSrc="/videos/VID_1.mp4"
-        playbackRate={playbackRate}
         frameOffset={frameOffset}
         filterClassName={KINETIC_FILTER}
         objectPosition={objectPosition}
@@ -77,8 +66,8 @@ function GalleryTile({
   )
 }
 
-/** Kinetic gallery: three real-footage tiles, each with its own playback speed
- *  and frame offset so the one shared source clip reads as different footage. */
+/** Kinetic gallery: three real-footage tiles, each with its own frame offset
+ *  so the one shared source clip reads as different footage. */
 function KineticGallery({ local }: { local: MotionValue<number> }) {
   return (
     <div className="hidden w-full max-w-md grid-cols-2 gap-4 md:grid">
@@ -87,7 +76,6 @@ function KineticGallery({ local }: { local: MotionValue<number> }) {
         objectPosition="30% 40%"
         delay={0}
         glowColor={CYAN}
-        playbackRate={1.3}
         frameOffset={0}
         className="aspect-3/4"
       />
@@ -97,7 +85,6 @@ function KineticGallery({ local }: { local: MotionValue<number> }) {
           objectPosition="65% 25%"
           delay={0.12}
           glowColor={LIME}
-          playbackRate={1.5}
           frameOffset={1.8}
           className="aspect-square"
         />
@@ -106,7 +93,6 @@ function KineticGallery({ local }: { local: MotionValue<number> }) {
           objectPosition="50% 75%"
           delay={0.24}
           glowColor={CYAN}
-          playbackRate={1.1}
           frameOffset={3.6}
           className="aspect-video"
         />

@@ -63,7 +63,6 @@ export function HeroBackdrop() {
         videoSrc="/videos/VID_1.mp4"
         gradient="bg-[radial-gradient(ellipse_at_50%_30%,#1a1a20_0%,#0b0b0e_65%)]"
         clear
-        playbackRate={0.85}
       />
       <HeroDust local={local} />
     </>
@@ -120,33 +119,31 @@ export function HeroContent() {
         <SubheadCycler />
       </motion.div>
 
-      {/* Bottom: generously spaced below the sub-text row so nothing ever
-          crowds once everything is docked and settled. */}
+      {/* Bottom: generously spaced below the sub-text row, and the only other
+          element left in the hero besides the wordmark and its cycler — no
+          secondary floating text tags (the old "Open Now" line) cluttering
+          the frame. */}
       <motion.div
-        style={{ opacity: indicatorOpacity, top: '40%', left: '50%', x: '-50%' }}
-        className="absolute flex flex-col items-center gap-3"
+        style={{
+          opacity: indicatorOpacity,
+          top: '40%',
+          left: '50%',
+          x: '-50%',
+          boxShadow: `0 0 26px ${CYAN}40`,
+        }}
+        className="absolute flex items-center gap-2 rounded-full border border-cyan/40 bg-white/[0.06] px-4 py-2 backdrop-blur-md"
       >
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-bone/85 sm:text-sm">
-          <span className="h-1.5 w-1.5 shrink-0 animate-pulse-slow rounded-full bg-cyan" />
-          Open Now &middot; 06:00 AM &ndash; 12:00 AM
-        </div>
-
-        <div
-          className="flex items-center gap-2 rounded-full border border-cyan/40 bg-white/[0.06] px-4 py-2 backdrop-blur-md"
-          style={{ boxShadow: `0 0 26px ${CYAN}40` }}
+        <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-bone">
+          Scroll to Explore Zones
+        </span>
+        <motion.span
+          animate={{ y: [0, 5, 0] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+          className="text-cyan"
+          style={{ textShadow: `0 0 10px ${CYAN}` }}
         >
-          <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-bone">
-            Scroll to Explore Zones
-          </span>
-          <motion.span
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-            className="text-cyan"
-            style={{ textShadow: `0 0 10px ${CYAN}` }}
-          >
-            &darr;
-          </motion.span>
-        </div>
+          &darr;
+        </motion.span>
       </motion.div>
     </motion.div>
   )

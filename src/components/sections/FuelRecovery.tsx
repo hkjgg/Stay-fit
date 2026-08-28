@@ -15,6 +15,9 @@ interface ProductCardData {
   shape: 'tub' | 'bottle'
   fill: string
   badges: string[]
+  /** Path to a real product cutout (transparent PNG) once one exists — falls
+   *  back to the procedural packshot silhouette below when omitted. */
+  imageSrc?: string
 }
 
 // Real current inventory (no photographic assets available in this project —
@@ -65,11 +68,36 @@ const INVENTORY: ProductCardData[] = [
   },
 ]
 
-/** Procedural packshot silhouette standing in for a photographic product
- *  asset — this project has no texture/decal pipeline to reproduce real
- *  packaging or label art, so shape + fill color carry the product's
- *  identity instead (dark tub for supplements, colored bottle for drinks). */
-function ProductPackshot({ shape, fill, accent }: { shape: 'tub' | 'bottle'; fill: string; accent: string }) {
+/**
+ * Product visual: a solid, non-transparent dark panel (deliberately opaque
+ * so it never lets background video motion bleed through and wash out
+ * whatever sits on it) hosting either a real product cutout — a
+ * high-contrast transparent PNG, once one exists — or, absent that, a
+ * procedural packshot silhouette carrying the product's shape/color
+ * identity. This project has no texture/decal pipeline to reproduce real
+ * packaging or label art, so the silhouette is a stand-in, not a photo.
+ */
+function ProductPackshot({
+  shape,
+  fill,
+  accent,
+  imageSrc,
+  name,
+}: {
+  shape: 'tub' | 'bottle'
+  fill: string
+  accent: string
+  imageSrc?: string
+  name: string
+}) {
+  if (imageSrc) {
+    return (
+      <div className="glass-card flex h-28 w-24 items-center justify-center rounded-xl p-2">
+        <img src={imageSrc} alt={name} className="h-full w-full object-contain drop-shadow-lg" />
+      </div>
+    )
+  }
+
   if (shape === 'bottle') {
     return (
       <div className="relative mx-auto h-28 w-12">
@@ -153,11 +181,16 @@ function ProductCard({ product, accent, delay }: { product: ProductCardData; acc
           rotateY,
           borderColor: `${accent}55`,
           boxShadow: `0 0 30px ${accent}35`,
-          background: 'rgba(11,11,14,0.45)',
         }}
-        className="flex w-40 flex-col items-center rounded-2xl border px-4 py-6 text-center backdrop-blur-lg transition-shadow duration-300"
+        className="glass-card flex w-40 flex-col items-center rounded-2xl border px-4 py-6 text-center transition-shadow duration-300"
       >
-        <ProductPackshot shape={product.shape} fill={product.fill} accent={accent} />
+        <ProductPackshot
+          shape={product.shape}
+          fill={product.fill}
+          accent={accent}
+          imageSrc={product.imageSrc}
+          name={product.name}
+        />
         <p className="mt-4 text-sm font-semibold uppercase leading-tight tracking-wide text-bone">{product.name}</p>
         <p className="mt-1 text-[10px] leading-tight text-bone/50">{product.brand}</p>
         {product.badges[2] && (

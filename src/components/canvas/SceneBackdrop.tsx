@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { motion, useMotionValueEvent, type MotionValue } from 'framer-motion'
+import { WatermarkMask } from './WatermarkMask'
 
 interface SceneBackdropProps {
   opacity: MotionValue<number>
@@ -16,9 +17,8 @@ interface SceneBackdropProps {
   /** Skips the heavy cinematic scrim stack for an ultra-clear video read (Hero), keeping
    *  only a thin obsidian vignette at the extreme edges so the center stays fully transparent. */
   clear?: boolean
-  /** Playback speed — a touch of slow motion reads as higher production value than 1x raw
-   *  footage. Varying this per section (alongside frameOffset) keeps two shared source
-   *  clips from feeling identical everywhere they're reused. */
+  /** Playback speed — slowed to a calm, luxury 0.75x by default. frameOffset still varies
+   *  per section so two shared source clips don't open on the same frame everywhere. */
   playbackRate?: number
   /** Seconds to seek into the clip on load, so different sections open on a different
    *  frame of the same source video instead of all starting in lockstep. */
@@ -49,7 +49,7 @@ export function SceneBackdrop({
   className = '',
   glass = false,
   clear = false,
-  playbackRate = 0.85,
+  playbackRate = 0.75,
   frameOffset = 0,
 }: SceneBackdropProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -96,6 +96,8 @@ export function SceneBackdrop({
         playsInline
         preload="metadata"
       />
+
+      <WatermarkMask />
 
       {clear ? (
         // Ultra-thin obsidian vignette at the extreme edges only — center stays fully clear

@@ -64,7 +64,6 @@ export function ReelsGrid() {
               >
                 <DynamicVideo
                   videoSrc={reel.video}
-                  playbackRate={reel.playbackRate}
                   frameOffset={reel.frameOffset}
                   filterClassName={FILTER_PRESETS[i % FILTER_PRESETS.length]}
                 />
