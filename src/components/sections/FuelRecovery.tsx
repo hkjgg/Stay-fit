@@ -13,24 +13,33 @@ interface ProductCardData {
   name: string
   brand: string
   shape: 'tub' | 'bottle'
+  /** Main body color of the container. */
   fill: string
+  /** Lid / cap color — lime anodized on the PR tubs, chrome on the BPI tub,
+   *  black on the Tip Top bottles. */
+  lid: string
+  /** Label band color running across the body. */
+  band: string
   badges: string[]
-  /** Real product photo under /public/images/supplements/. Each card renders
-   *  this centered with object-contain; if the file isn't present the card
-   *  degrades to the procedural silhouette below rather than showing a
-   *  broken image (see ProductPackshot). */
-  imageSrc: string
+  /** Optional real product photo under /public/images/supplements/. The
+   *  styled silhouette is the intended visual; if a photo is ever dropped in
+   *  under this path it takes over automatically, and a missing or broken
+   *  file falls straight back to the silhouette. */
+  imageSrc?: string
 }
 
 const IMG = '/images/supplements'
 
-// Real current inventory, each bound to its own product photo.
+// Real current inventory. Each silhouette is drawn from its actual packaging:
+// body / lid / label-band colors are per-product rather than generic.
 const INVENTORY: ProductCardData[] = [
   {
     name: 'Micro Creatine',
     brand: 'PR Sciences × Larry Wheels',
     shape: 'tub',
-    fill: '#15161a',
+    fill: '#1b1e22',
+    lid: '#9ccf2e',
+    band: '#2b3138',
     badges: ['120 Servings', '732g', 'Unflavored'],
     imageSrc: `${IMG}/pr-micro-creatine.png`,
   },
@@ -38,7 +47,9 @@ const INVENTORY: ProductCardData[] = [
     name: 'Essentials EAAs',
     brand: 'PR Sciences · Sour Gummy',
     shape: 'tub',
-    fill: '#15161a',
+    fill: '#1b1e22',
+    lid: '#b5d94a',
+    band: '#2b3138',
     badges: ['25 Servings', 'EAAs + Hydration', '345g'],
     imageSrc: `${IMG}/pr-essentials-eaas.png`,
   },
@@ -46,7 +57,9 @@ const INVENTORY: ProductCardData[] = [
     name: 'Vegan Protein',
     brand: 'BPI Sports · Chocolate',
     shape: 'tub',
-    fill: '#161514',
+    fill: '#141416',
+    lid: '#b9b5a6',
+    band: '#e9eae4',
     badges: ['20g Protein', '0g Sugar', 'Non-Dairy'],
     imageSrc: `${IMG}/bpi-vegan-protein.png`,
   },
@@ -55,6 +68,8 @@ const INVENTORY: ProductCardData[] = [
     brand: 'Tip Top Hydration',
     shape: 'bottle',
     fill: '#3ddc45',
+    lid: '#121316',
+    band: '#121316',
     badges: ['25X Electrolytes', '500ML', 'Vitamins B1·B3·B6'],
     imageSrc: `${IMG}/tiptop-mint-lemonade.png`,
   },
@@ -63,6 +78,8 @@ const INVENTORY: ProductCardData[] = [
     brand: 'Tip Top Hydration',
     shape: 'bottle',
     fill: '#e8362f',
+    lid: '#121316',
+    band: '#121316',
     badges: ['25X Electrolytes', '500ML', 'No Artificial Flavors'],
     imageSrc: `${IMG}/tiptop-fruits-punch.png`,
   },
@@ -71,29 +88,37 @@ const INVENTORY: ProductCardData[] = [
     brand: 'Tip Top Hydration',
     shape: 'bottle',
     fill: '#2fa7e6',
+    lid: '#121316',
+    band: '#121316',
     badges: ['25X Electrolytes', '500ML', 'Vitamins B1·B3·B6'],
     imageSrc: `${IMG}/tiptop-glowberry.png`,
   },
 ]
 
 /**
- * Product visual: the real product photo, centered and object-contain so it
- * never distorts, on a solid dark panel (deliberately opaque so background
- * video motion can't bleed through and wash it out).
+ * Styled CSS silhouette of the product — the intended visual for these cards.
+ * Body, lid and label-band colors come from the real packaging, and a shared
+ * specular highlight down the left edge plus a contact shadow underneath give
+ * each one a rounded, lit-from-the-side read rather than looking like a flat
+ * rectangle.
  *
- * If the image file is missing the card falls back to a procedural
- * silhouette carrying the product's shape/color identity, so a not-yet-added
- * asset degrades gracefully instead of rendering a broken-image icon.
+ * If a real photo is ever dropped into /public/images/supplements/ it takes
+ * over automatically; a missing or undecodable file falls straight back here,
+ * so the card can never render a broken-image icon.
  */
 function ProductPackshot({
   shape,
   fill,
+  lid,
+  band,
   accent,
   imageSrc,
   name,
 }: {
   shape: 'tub' | 'bottle'
   fill: string
+  lid: string
+  band: string
   accent: string
   imageSrc?: string
   name: string
@@ -114,26 +139,72 @@ function ProductPackshot({
     )
   }
 
+  // Curved specular highlight + right-edge falloff, shared by both shapes so
+  // the containers read as cylinders instead of flat blocks.
+  const cylinder =
+    'linear-gradient(90deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 18%, rgba(255,255,255,0) 42%, rgba(0,0,0,0.28) 88%, rgba(0,0,0,0.42) 100%)'
+
   if (shape === 'bottle') {
     return (
-      <div className="relative mx-auto h-28 w-12">
-        <div className="absolute inset-x-3 top-0 h-3 rounded-t-sm bg-obsidian" style={{ boxShadow: `0 0 8px ${accent}55` }} />
-        <div className="absolute inset-x-0 top-3 bottom-0 overflow-hidden rounded-2xl rounded-t-md" style={{ background: fill }}>
-          <div className="absolute inset-x-0 top-[38%] h-7 bg-obsidian/88" />
-          <div className="absolute inset-x-0 bottom-0 h-2 bg-obsidian/70" />
+      <div className="relative mx-auto h-28 w-[3.25rem]" aria-hidden="true">
+        {/* cap */}
+        <div
+          className="absolute inset-x-[0.85rem] top-0 h-[0.55rem] rounded-t-[3px]"
+          style={{ background: lid, boxShadow: `0 0 10px ${accent}55` }}
+        />
+        {/* neck */}
+        <div className="absolute inset-x-[1.05rem] top-[0.5rem] h-[0.35rem]" style={{ background: `${fill}cc` }} />
+        {/* body */}
+        <div
+          className="absolute inset-x-0 bottom-0 top-[0.8rem] overflow-hidden rounded-[0.9rem] rounded-t-[0.5rem]"
+          style={{ background: fill }}
+        >
+          {/* shoulder chevron band */}
+          <div className="absolute inset-x-0 top-0 h-[0.9rem]" style={{ background: band }} />
+          <div
+            className="absolute left-1/2 top-[0.55rem] h-3 w-3 -translate-x-1/2 rotate-45"
+            style={{ background: band }}
+          />
+          {/* lower label band */}
+          <div className="absolute inset-x-0 bottom-[0.45rem] h-[0.3rem]" style={{ background: band }} />
+          <div className="absolute inset-0" style={{ background: cylinder }} />
         </div>
+        <div
+          className="absolute -bottom-1 left-1/2 h-1.5 w-10 -translate-x-1/2 rounded-[50%] blur-[3px]"
+          style={{ background: 'rgba(0,0,0,0.55)' }}
+        />
       </div>
     )
   }
+
   return (
-    <div className="relative mx-auto h-24 w-20">
+    <div className="relative mx-auto h-28 w-[5rem] pt-2" aria-hidden="true">
+      {/* lid */}
       <div
-        className="absolute inset-x-3 -top-2 h-4 rounded-t-lg"
-        style={{ background: `linear-gradient(180deg, ${accent}cc, ${accent}55)`, boxShadow: `0 0 10px ${accent}66` }}
+        className="absolute inset-x-[0.3rem] top-0 h-[0.9rem] rounded-t-[0.4rem]"
+        style={{
+          background: `linear-gradient(180deg, ${lid}, ${lid}aa)`,
+          boxShadow: `0 0 12px ${accent}55`,
+        }}
       />
-      <div className="absolute inset-0 top-2 overflow-hidden rounded-xl" style={{ background: fill }}>
-        <div className="absolute inset-x-0 top-1/2 h-6" style={{ background: `linear-gradient(180deg, ${accent}33, transparent)` }} />
+      {/* body */}
+      <div
+        className="absolute inset-x-0 bottom-0 top-[0.8rem] overflow-hidden rounded-[0.45rem]"
+        style={{ background: fill }}
+      >
+        {/* label band */}
+        <div className="absolute inset-x-0 top-[30%] h-[38%]" style={{ background: band, opacity: 0.9 }} />
+        {/* serving tag */}
+        <div
+          className="absolute bottom-[0.45rem] left-[0.4rem] h-[0.6rem] w-[0.9rem] rounded-[2px]"
+          style={{ background: lid }}
+        />
+        <div className="absolute inset-0" style={{ background: cylinder }} />
       </div>
+      <div
+        className="absolute -bottom-1 left-1/2 h-1.5 w-14 -translate-x-1/2 rounded-[50%] blur-[3px]"
+        style={{ background: 'rgba(0,0,0,0.55)' }}
+      />
     </div>
   )
 }
@@ -191,18 +262,28 @@ function ProductCard({ product, accent, delay }: { product: ProductCardData; acc
         ref={ref}
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
-        whileHover={{ scale: 1.06 }}
+        // Hover lifts the card, scales it slightly, and drives the neon rim
+        // from a resting glow up to a bright bloom in the product's accent.
+        whileHover={{
+          scale: 1.06,
+          y: -6,
+          boxShadow: `0 0 52px ${accent}75`,
+          borderColor: `${accent}cc`,
+        }}
+        transition={{ type: 'spring', stiffness: 260, damping: 22 }}
         style={{
           rotateX,
           rotateY,
           borderColor: `${accent}55`,
           boxShadow: `0 0 30px ${accent}35`,
         }}
-        className="glass-card flex w-40 flex-col items-center rounded-2xl border px-4 py-6 text-center transition-shadow duration-300"
+        className="glass-card flex w-40 flex-col items-center rounded-2xl border px-4 py-6 text-center"
       >
         <ProductPackshot
           shape={product.shape}
           fill={product.fill}
+          lid={product.lid}
+          band={product.band}
           accent={accent}
           imageSrc={product.imageSrc}
           name={product.name}
@@ -222,9 +303,12 @@ function ProductCard({ product, accent, delay }: { product: ProductCardData; acc
   )
 }
 
+/** `overflow-x-auto` also clips vertically, so the floating spec badges — which
+ *  sit outside each card's bounds — need the vertical padding here, otherwise
+ *  they get cut off at the top and bottom of the scroller. */
 function ProductCarousel() {
   return (
-    <div className="flex gap-6 overflow-x-auto px-1 pb-4 [scrollbar-width:thin] snap-x snap-mandatory">
+    <div className="flex gap-6 overflow-x-auto px-2 py-8 [scrollbar-width:thin] snap-x snap-mandatory">
       {INVENTORY.map((product, i) => (
         <ProductCard key={product.name} product={product} accent={i % 2 === 0 ? LIME : RIM_CYAN} delay={i} />
       ))}
