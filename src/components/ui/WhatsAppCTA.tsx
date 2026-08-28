@@ -1,11 +1,9 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { WHATSAPP_LOCATION, WHATSAPP_NUMBER } from '../../lib/constants'
+import { OPENING_HOURS, WHATSAPP_LOCATION, whatsappLink } from '../../lib/constants'
 
 export function WhatsAppCTA() {
   const [open, setOpen] = useState(false)
-  const message = encodeURIComponent("Hi Stay Fit! I'd like to know more about membership.")
-
   return (
     <div className="fixed bottom-5 right-5 z-[80] flex flex-col items-end gap-3">
       <AnimatePresence>
@@ -19,11 +17,12 @@ export function WhatsAppCTA() {
           >
             <p className="font-display text-lg text-bone">STAY FIT</p>
             <p className="mt-1 text-xs text-bone/60">{WHATSAPP_LOCATION}</p>
+            <p className="mt-1 text-xs text-cyan-soft">Open daily {OPENING_HOURS}</p>
             <p className="mt-3 text-sm text-bone/75">
               Questions about plans, hours, or the fuel bar? Message us directly on WhatsApp.
             </p>
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`}
+              href={whatsappLink()}
               target="_blank"
               rel="noreferrer"
               className="mt-4 flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-obsidian transition hover:scale-[1.02]"

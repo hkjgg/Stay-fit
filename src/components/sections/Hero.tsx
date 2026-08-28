@@ -4,7 +4,7 @@ import { useSceneOpacity, useSceneLocalProgress } from '../../hooks/useSceneRang
 import { SceneBackdrop } from '../canvas/SceneBackdrop'
 import { HeroDust } from '../canvas/HeroDust'
 import { rangeProgress, smoothstep, lerp } from '../../lib/scroll3d'
-import { sceneRange } from '../../lib/constants'
+import { sceneRange, OPENING_HOURS } from '../../lib/constants'
 import { POSTERS } from '../../lib/videoPoster'
 
 const RANGE = sceneRange('hero')
@@ -121,14 +121,14 @@ export function HeroContent() {
         <SubheadCycler />
       </motion.div>
 
-      {/* Bottom: generously spaced below the sub-text row, and the only other
-          element left in the hero besides the wordmark and its cycler — no
-          secondary floating text tags (the old "Open Now" line) cluttering
-          the frame.
+      {/* Bottom: a single pill carrying the opening hours and the scroll cue,
+          generously spaced below the sub-text row. Combining them keeps the
+          hours visible without reintroducing a second floating tag.
 
           `whitespace-nowrap` matters here: the pill is absolutely positioned at
           left:50%, so its shrink-to-fit width is capped at half the container —
-          on a phone that wrapped the label onto three lines. */}
+          on a phone that wrapped the label onto three lines. The "Scroll" word
+          is dropped below sm: so the hours always fit on one line. */}
       <motion.div
         style={{
           opacity: indicatorOpacity,
@@ -139,8 +139,13 @@ export function HeroContent() {
         }}
         className="absolute flex items-center gap-2 whitespace-nowrap rounded-full border border-cyan/40 bg-white/[0.06] px-3 py-2 backdrop-blur-sm sm:px-4 md:backdrop-blur-md"
       >
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-bone sm:text-[11px] sm:tracking-[0.3em]">
-          Scroll to Explore Zones
+        <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-bone sm:text-[11px] sm:tracking-[0.3em]">
+          <span className="h-1.5 w-1.5 shrink-0 animate-pulse-slow rounded-full bg-cyan" />
+          Open {OPENING_HOURS}
+        </span>
+        <span className="hidden h-3 w-px bg-bone/25 sm:block" />
+        <span className="hidden text-[11px] font-bold uppercase tracking-[0.3em] text-bone/70 sm:inline">
+          Scroll
         </span>
         <motion.span
           animate={{ y: [0, 5, 0] }}

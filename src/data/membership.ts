@@ -1,7 +1,9 @@
 export interface Plan {
   id: string
   name: string
-  price: number
+  /** Omitted for inquiry-only packages — those show an "Inquire via WhatsApp"
+   *  CTA instead of a fixed price, and are quoted per person over chat. */
+  price?: number
   blurb: string
   perks: string[]
 }
@@ -13,27 +15,27 @@ export interface AddOn {
   description: string
 }
 
+// The headline monthly membership carries the only published price; every
+// other package is quoted over WhatsApp rather than listed.
 export const PLANS: Plan[] = [
   {
-    id: 'basic',
-    name: 'Basic',
-    price: 35,
-    blurb: 'Full gym floor, open hours',
-    perks: ['Heavy Lifting Zone access', 'Standard equipment', 'Locker room'],
+    id: 'monthly',
+    name: 'Monthly Membership',
+    price: 40,
+    blurb: 'Full gym floor + all zones, month to month',
+    perks: ['Heavy Lifting Zone access', 'Cardio & Kinetic Zone classes', 'Locker room'],
   },
   {
-    id: 'standard',
-    name: 'Standard',
-    price: 55,
-    blurb: 'Floor + Cardio & Kinetic classes',
-    perks: ['Everything in Basic', 'Cardio & Kinetic Zone classes', 'Free fitness assessment'],
+    id: 'personal',
+    name: 'Personal Coaching',
+    blurb: 'One-on-one programming with a coach',
+    perks: ['Everything in Monthly', 'Dedicated coach sessions', 'Custom progression plan'],
   },
   {
     id: 'vip',
-    name: 'VIP',
-    price: 85,
+    name: 'VIP All-Access',
     blurb: 'All-access, priority everything',
-    perks: ['Everything in Standard', 'Fuel & Recovery Hub access', 'Priority booking'],
+    perks: ['Everything in Monthly', 'Fuel & Recovery Hub access', 'Priority booking'],
   },
 ]
 

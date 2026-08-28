@@ -2,16 +2,19 @@ import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ADD_ONS, PLANS } from '../../data/membership'
 import { AnimatedPrice } from '../ui/AnimatedPrice'
-import { WHATSAPP_NUMBER } from '../../lib/constants'
+import { whatsappLink } from '../../lib/constants'
 
 export function MembershipConfigurator() {
-  const [planId, setPlanId] = useState(PLANS[1].id)
+  const [planId, setPlanId] = useState(PLANS[0].id)
   const [addOns, setAddOns] = useState<Set<string>>(new Set())
 
   const plan = PLANS.find((p) => p.id === planId)!
+  // Inquiry-only plans have no published price, so there's no live total to
+  // show for them — the panel switches to a quote-on-WhatsApp state instead.
+  const isQuoted = plan.price === undefined
   const total = useMemo(() => {
     const addOnTotal = ADD_ONS.filter((a) => addOns.has(a.id)).reduce((sum, a) => sum + a.price, 0)
-    return plan.price + addOnTotal
+    return (plan.price ?? 0) + addOnTotal
   }, [plan, addOns])
 
   const toggleAddOn = (id: string) => {
@@ -23,11 +26,12 @@ export function MembershipConfigurator() {
     })
   }
 
-  const waMessage = encodeURIComponent(
-    `Hi Stay Fit! I'd like to join the ${plan.name} plan${
-      addOns.size ? ` with add-ons: ${[...addOns].map((id) => ADD_ONS.find((a) => a.id === id)?.label).join(', ')}` : ''
-    } (~$${total}/mo).`,
-  )
+  const addOnSuffix = addOns.size
+    ? ` with add-ons: ${[...addOns].map((id) => ADD_ONS.find((a) => a.id === id)?.label).join(', ')}`
+    : ''
+  const waMessage = isQuoted
+    ? `Hi Stay Fit! I'd like a quote for the ${plan.name} package${addOnSuffix}.`
+    : `Hi Stay Fit! I'd like to join the ${plan.name} plan${addOnSuffix} (~$${total}/mo).`
 
   return (
     <section id="membership" className="relative bg-obsidian-soft px-4 py-20 md:px-12 md:py-24 lg:py-32">
@@ -66,10 +70,16 @@ export function MembershipConfigurator() {
                 )}
                 <p className="font-display text-2xl text-bone">{p.name}</p>
                 <p className="mt-1 text-sm text-bone/50">{p.blurb}</p>
-                <p className="mt-4 font-display text-3xl text-orange-soft">
-                  ${p.price}
-                  <span className="ml-1 text-sm text-bone/40">/mo</span>
-                </p>
+                {p.price === undefined ? (
+                  <span className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#25D366]/50 bg-[#25D366]/10 px-3 py-1.5 text-xs font-semibold text-[#25D366]">
+                    Inquire via WhatsApp
+                  </span>
+                ) : (
+                  <p className="mt-4 font-display text-3xl text-orange-soft">
+                    ${p.price}
+                    <span className="ml-1 text-sm text-bone/40">/mo</span>
+                  </p>
+                )}
                 <ul className="mt-4 space-y-1.5 text-xs text-bone/60">
                   {p.perks.map((perk) => (
                     <li key={perk} className="flex items-center gap-2">
@@ -118,18 +128,36 @@ export function MembershipConfigurator() {
           </div>
 
           <div className="flex flex-col items-center justify-center rounded-2xl bg-gradient-to-b from-white/[0.04] to-transparent p-6 text-center">
-            <p className="text-xs uppercase tracking-[0.3em] text-bone/50">Estimated Monthly</p>
-            <p className="font-display mt-2 text-6xl text-bone">
-              $<AnimatedPrice value={total} />
-            </p>
-            <p className="mt-1 text-xs text-bone/40">{plan.name} plan + {addOns.size} add-on{addOns.size === 1 ? '' : 's'}</p>
+            {isQuoted ? (
+              <>
+                <p className="text-xs uppercase tracking-[0.3em] text-bone/50">Custom Quote</p>
+                <p className="font-display mt-2 text-4xl text-bone">By Request</p>
+                <p className="mt-1 text-xs text-bone/40">
+                  {plan.name} is priced per person — message us for a quote.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-xs uppercase tracking-[0.3em] text-bone/50">Estimated Monthly</p>
+                <p className="font-display mt-2 text-6xl text-bone">
+                  $<AnimatedPrice value={total} />
+                </p>
+                <p className="mt-1 text-xs text-bone/40">
+                  {plan.name} + {addOns.size} add-on{addOns.size === 1 ? '' : 's'}
+                </p>
+              </>
+            )}
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${waMessage}`}
+              href={whatsappLink(waMessage)}
               target="_blank"
               rel="noreferrer"
-              className="mt-6 w-full rounded-full bg-gradient-to-r from-orange to-blue px-6 py-3 text-sm font-semibold uppercase tracking-wide text-obsidian transition hover:scale-[1.03]"
+              className={`mt-6 w-full rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-wide transition hover:scale-[1.03] ${
+                isQuoted
+                  ? 'bg-[#25D366] text-obsidian'
+                  : 'bg-gradient-to-r from-orange to-blue text-obsidian'
+              }`}
             >
-              Claim This Plan
+              {isQuoted ? 'Inquire via WhatsApp' : 'Claim This Plan'}
             </a>
           </div>
         </div>
